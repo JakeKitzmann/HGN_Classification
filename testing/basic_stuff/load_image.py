@@ -9,5 +9,7 @@ if image is None:
 else:
     # Display the image
     cv.imshow('image', image)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+
+    # img instantly closes w/o this
+    cv.waitKey(0) # wait for key    
+    cv.destroyAllWindows() # close the window
