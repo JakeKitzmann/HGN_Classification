@@ -27,7 +27,7 @@ class MainApplication(CTk.CTk):
         button = CTk.CTkButton(self.main_frame, text="Testing", command=self.switch_to_testing, width=300, height=80)
         button.place(anchor="center", relx=0.5, rely=0.5)
       
-
+    #switch to testing scene 
     def switch_to_testing(self):
         # Hide the main frame and show the testing frame
         self.main_frame.pack_forget()
@@ -64,7 +64,7 @@ class TestingScreen(CTk.CTkFrame):
         
         #button to return to the main screen
         button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
-        button.place(anchor="center", relx=0.5, rely=0.5)
+        button.place(anchor="s", relx=0.5, rely=0.95)
 
         # Start the animation
         self.move_dot()
@@ -84,6 +84,7 @@ class TestingScreen(CTk.CTkFrame):
         # Repeat the animation every 10 milliseconds
         self.after(10, self.move_dot)
 
+    #swap to main scene 
     def return_to_main(self):
         self.pack_forget()
         self.master.main_frame.pack(fill="both", expand=True)
