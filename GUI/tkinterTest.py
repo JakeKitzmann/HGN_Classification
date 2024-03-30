@@ -67,7 +67,7 @@ if __name__ == "__main__":
 #moving dot animation for second scene 
 
 
-'''
+
 class MovingDotApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -114,4 +114,3 @@ if __name__ == "__main__":
     app = MovingDotApp()
     app.mainloop()
 
-'''
