@@ -1,6 +1,73 @@
 import customtkinter as ctk
 import tkinter as tk
 
+
+
+class BaseScene(ctk.CTkFrame):
+    def __init__(self, master):
+        super().__init__(master)
+        self.master = master
+
+    def show(self):
+        self.pack(fill="both", expand=True)
+
+    def hide(self):
+        self.pack_forget()
+
+class MainScene(BaseScene):
+    def __init__(self, master):
+        super().__init__(master)
+        ctk.CTkLabel(self, text="This is the Main Scene").pack(pady=20)
+        ctk.CTkButton(self, text="Go to Scene 2", command=lambda: master.switch_scene(SecondScene)).pack()
+
+class SecondScene(BaseScene):
+    def __init__(self, master):
+        super().__init__(master)
+        ctk.CTkLabel(self, text="This is the Second Scene").pack(pady=20)
+        ctk.CTkButton(self, text="Back to Main Scene", command=lambda: master.switch_scene(MainScene)).pack()
+
+
+
+
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("Scene Switcher")
+        self.geometry("400x300")
+
+        self.scenes = {}
+        self.current_scene = None
+        self.switch_scene(MainScene)
+
+    def switch_scene(self, scene_class):
+        if self.current_scene is not None:
+            self.current_scene.hide()
+        scene = self.scenes.get(scene_class)
+        if scene is None:
+            scene = scene_class(self)
+            self.scenes[scene_class] = scene
+        self.current_scene = scene
+        self.current_scene.show()
+
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+#moving dot animation for second scene 
+
+
+'''
 class MovingDotApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -46,3 +113,5 @@ class MovingDotApp(ctk.CTk):
 if __name__ == "__main__":
     app = MovingDotApp()
     app.mainloop()
+
+'''

@@ -4,7 +4,7 @@ from kivy.graphics import Color, Ellipse
 from kivy.clock import Clock
 from kivy.core.window import Window
 
-
+#This is to test the GUI using Kivy
 # this will be the main gui for the HGN test 
 # This program uses the Kivy library to create a GUI
 # "python -m pip install --upgrade pip wheel virtualenv"
