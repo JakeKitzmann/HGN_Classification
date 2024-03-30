@@ -21,11 +21,11 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initial dot position
         self.dot_x = 10
-        self.dot_y = 200
+        self.dot_y = 20
         self.dot_radius = 10
 
         # Dot's movement speed
-        self.speed = 2
+        self.speed = 5
 
         # Draw the initial dot
         self.dot = self.canvas.create_oval(self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
