@@ -16,12 +16,7 @@ class MainApplication(CTk.CTk):
 
         self.title('Main Screen')
         self.geometry('1920x1080')  # Set the size of the window
-        global screenWidth
-        screenWidth = self.winfo_width()
-        print(screenWidth)
-        global screenHeight
-        screenHeight = self.winfo_height()
-      
+
         # Main screen frame
         self.main_frame = CTk.CTkFrame(self)
         self.main_frame.pack(fill="both", expand=True)
@@ -40,6 +35,14 @@ class MainApplication(CTk.CTk):
         self.main_frame.pack_forget()
         self.testing_frame.pack(fill="both", expand=True)
 
+        global screenWidth
+        screenWidth = self.winfo_width()
+        print(screenWidth)
+        global screenHeight
+        screenHeight = self.winfo_height()
+      
+
+
 
 
 ###########################################################################################################################################
@@ -56,7 +59,8 @@ class TestingScreen(CTk.CTkFrame):
         self.canvas.pack()
 
         # Initial dot position
-        self.dot_x = screenWidth / 2
+        screenWidth = 1920/2
+        self.dot_x = 960
         self.dot_y = 20
         self.dot_radius = 10
 
@@ -72,16 +76,18 @@ class TestingScreen(CTk.CTkFrame):
     
         
         #button to return to the main screen
-        button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
-        button.place(anchor="s", relx=0.5, rely=0.95)
+        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
+        self.button.place(anchor="s", relx=0.5, rely=0.95)
         
         #button to begin test
-        button = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
-        button.place(anchor="s", relx=0.5, rely=0.5)
+        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
+        self.button2.place(anchor="s", relx=0.5, rely=0.5)
         # Start the animation
         #self.move_dot()
 
     def move_dot(self):
+        
+        self.button2.place_forget()
         # Update the dot's position
         self.dot_x += self.speed
 
@@ -97,8 +103,23 @@ class TestingScreen(CTk.CTkFrame):
         # Repeat the animation every 10 milliseconds
         self.after(10, self.move_dot)
 
+    def reset_screen(self):
+        # Reset all attributes to their initial values
+       # self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
+        self.button2.pack()
+
+        self.dot_x = 960
+        self.dot_y = 20
+        self.dot_radius = 10
+
+        # Dot's movement speed
+        self.speed = 5
+        
+
+
     #swap to main scene 
     def return_to_main(self):
+        self.reset_screen()
         self.pack_forget()
         self.master.main_frame.pack(fill="both", expand=True)
 
