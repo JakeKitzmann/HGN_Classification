@@ -6,6 +6,8 @@ CTk.set_appearance_mode("System")  # Can be "System", "Dark", or "Light"
 CTk.set_default_color_theme("blue")  # Sets the default color theme
 
 
+screenWidth = 0
+
 ################################################################################################################################################
 #main start screen
 class MainApplication(CTk.CTk):
@@ -14,7 +16,12 @@ class MainApplication(CTk.CTk):
 
         self.title('Main Screen')
         self.geometry('1920x1080')  # Set the size of the window
-
+        global screenWidth
+        screenWidth = self.winfo_width()
+        print(screenWidth)
+        global screenHeight
+        screenHeight = self.winfo_height()
+      
         # Main screen frame
         self.main_frame = CTk.CTkFrame(self)
         self.main_frame.pack(fill="both", expand=True)
@@ -49,7 +56,7 @@ class TestingScreen(CTk.CTkFrame):
         self.canvas.pack()
 
         # Initial dot position
-        self.dot_x = 10
+        self.dot_x = screenWidth / 2
         self.dot_y = 20
         self.dot_radius = 10
 
@@ -57,10 +64,12 @@ class TestingScreen(CTk.CTkFrame):
         self.speed = 5
 
         # Draw the initial dot
+        
         self.dot = self.canvas.create_oval(self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
                                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius,
                                            fill="black", outline="black")
-
+      
+    
         
         #button to return to the main screen
         button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
@@ -79,6 +88,7 @@ class TestingScreen(CTk.CTkFrame):
         # Reverse the direction if the dot hits the canvas edge
         if self.dot_x >= self.canvas.winfo_width() - self.dot_radius or self.dot_x <= self.dot_radius:
             self.speed = -self.speed
+            
 
         # Move the dot
         self.canvas.coords(self.dot, self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
