@@ -65,9 +65,12 @@ class TestingScreen(CTk.CTkFrame):
         #button to return to the main screen
         button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
         button.place(anchor="s", relx=0.5, rely=0.95)
-
+        
+        #button to begin test
+        button = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
+        button.place(anchor="s", relx=0.5, rely=0.5)
         # Start the animation
-        self.move_dot()
+        #self.move_dot()
 
     def move_dot(self):
         # Update the dot's position
