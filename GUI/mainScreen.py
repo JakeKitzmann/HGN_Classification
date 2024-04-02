@@ -82,7 +82,7 @@ class TestingScreen(CTk.CTkFrame):
         #button to begin test
         self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
         self.button2.place(anchor="s", relx=0.5, rely=0.5)
-        self.button2.place()  # Place the button back
+        #self.button2.place()  # Place the button back
         # Start the animation
         #self.move_dot()
 
@@ -107,7 +107,7 @@ class TestingScreen(CTk.CTkFrame):
 
     def reset_screen(self):
         # Reset all attributes to their initial values
-        self.button2.place(anchor="s", relx=0.5, rely=0.5)  # Place the button back
+        self.button2.place()  # Place the button back
         self.dot_x = 960
         self.dot_y = 20
         self.speed = 0
