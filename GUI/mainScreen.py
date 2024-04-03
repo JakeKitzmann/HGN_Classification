@@ -66,7 +66,7 @@ class TestingScreen(CTk.CTkFrame):
         self.dot_radius = 10
 
         # Dot's movement speed
-        self.speed = 5
+        self.speed = 6
 
         self.is_moving = False
         # Draw the initial dot
@@ -94,7 +94,7 @@ class TestingScreen(CTk.CTkFrame):
         self.button2.configure(state="disabled")
         #print("start test")
         self.is_moving = True
-        self.speed = 5
+        self.speed = 6
         print(self.speed)
         self.move_dot()
         
@@ -126,7 +126,7 @@ class TestingScreen(CTk.CTkFrame):
         # Reset all attributes to their initial values
        # self.button2.place(anchor="s", relx=0.5, rely=0.5)  # Place the button back
        # self.button2.lift()
-    
+        self.is_moving = False
         self.button2.configure(state="normal")
         self.dot_x = 960
         self.dot_y = 20
