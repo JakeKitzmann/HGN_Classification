@@ -7,6 +7,7 @@ CTk.set_default_color_theme("blue")  # Sets the default color theme
 
 
 screenWidth = 0
+move = None
 
 ################################################################################################################################################
 #main start screen
@@ -37,7 +38,7 @@ class MainApplication(CTk.CTk):
 
         global screenWidth
         screenWidth = self.winfo_width()
-        print(screenWidth)
+    
         global screenHeight
         screenHeight = self.winfo_height()
       
@@ -67,6 +68,7 @@ class TestingScreen(CTk.CTkFrame):
         # Dot's movement speed
         self.speed = 5
 
+        self.is_moving = False
         # Draw the initial dot
         
         self.dot = self.canvas.create_oval(self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
@@ -80,15 +82,28 @@ class TestingScreen(CTk.CTkFrame):
         self.button.place(anchor="s", relx=0.5, rely=0.95)
         
         #button to begin test
-        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.move_dot, width=250, height=60)
+        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=250, height=60)
         self.button2.place(anchor="s", relx=0.5, rely=0.5)
         #self.button2.place()  # Place the button back
         # Start the animation
         #self.move_dot()
 
-    def move_dot(self):
+
+    #start the test and flag is_moving as true 
+    def start_test(self):
+        self.button2.configure(state="disabled")
+        #print("start test")
+        self.is_moving = True
+        self.speed = 5
+        print(self.speed)
+        self.move_dot()
         
-        self.button2.place_forget()
+    def move_dot(self):
+        #move = True
+        
+        if not self.is_moving:
+            return
+           
     
         # Update the dot's position
         self.dot_x += self.speed
@@ -103,11 +118,16 @@ class TestingScreen(CTk.CTkFrame):
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)
 
         # Repeat the animation every 10 milliseconds
+        
+        
         self.after(10, self.move_dot)
 
     def reset_screen(self):
         # Reset all attributes to their initial values
-        self.button2.place()  # Place the button back
+       # self.button2.place(anchor="s", relx=0.5, rely=0.5)  # Place the button back
+       # self.button2.lift()
+    
+        self.button2.configure(state="normal")
         self.dot_x = 960
         self.dot_y = 20
         self.speed = 0
