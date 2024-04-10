@@ -55,14 +55,33 @@ def cut_eyebrows(img):
     return img
 
 
-def blob_process(img, threshold, detector):
-    gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, img = cv2.threshold(gray_frame, threshold, 255, cv2.THRESH_BINARY)
+def blob_process(img, threshold, detector, eye):
+
+    gray_eye = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray_eye = cv2.GaussianBlur(gray_eye, (9, 9), 0)
+    gray_eye = cv2.medianBlur(gray_eye, 3)
+    
+
+    _, img = cv2.threshold(gray_eye, threshold, 255, cv2.THRESH_BINARY)
     img = cv2.erode(img, None, iterations=2)
-    img = cv2.dilate(img, None, iterations=4)
-    img = cv2.medianBlur(img, 5)
     keypoints = detector.detect(img)
-    print(keypoints)
+
+    if len(keypoints) > 1:
+        # calculate the center of the image
+        h, w = img.shape[:2]
+        center = (w / 2, h / 2)
+
+        # calculate the distance of each keypoint from the center
+        distances = [cv2.norm((kp.pt[0] - center[0], kp.pt[1] - center[1])) for kp in keypoints]
+
+        # find the index of the keypoint closest to the center
+        closest_index = np.argmin(distances)
+
+        # keep only the closest keypoint
+        keypoints = [keypoints[closest_index]]
+
+    cv2.imshow('Eye Color' + str(eye), gray_eye)
+    cv2.imshow('Thresholded' + str(eye), img)
     return keypoints
 
 
@@ -71,25 +90,23 @@ def nothing(x):
 
 
 def main():
-    cap = cv2.VideoCapture(0)
-    cv2.namedWindow('image')
-    cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
-    while True:
-        _, frame = cap.read()
-        face_frame = detect_faces(frame, face_cascade)
-        if face_frame is not None:
-            eyes = detect_eyes(face_frame, eye_cascade)
-            for eye in eyes:
-                if eye is not None:
-                    threshold  = cv2.getTrackbarPos('threshold', 'image')
-                    eye = cut_eyebrows(eye)
-                    keypoints = blob_process(eye, threshold, detector)
-                    eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-        frame = cv2.flip(frame, 1)
-        cv2.imshow('image', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    cap.release()
+    frame = cv2.imread('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/Photos/woman.jpg')
+    face_frame = detect_faces(frame, face_cascade)
+
+    if face_frame is not None:
+        eyes = detect_eyes(face_frame, eye_cascade)
+        eyeNum = 0
+        for eye in eyes:
+            if eye is not None:
+                threshold  = 30
+                eye = cut_eyebrows(eye)
+                keypoints = blob_process(eye, threshold, detector, eyeNum)
+                eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                eyeNum += 1
+    #frame = cv2.flip(frame, 1)
+    cv2.imshow('image', frame)
+
+    cv2.waitKey(0)
     cv2.destroyAllWindows()
 
 
