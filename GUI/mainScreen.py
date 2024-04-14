@@ -35,7 +35,6 @@ class MainApplication(CTk.CTk):
         # Hide the main frame and show the testing frame
         self.main_frame.pack_forget()
         self.testing_frame.pack(fill="both", expand=True)
-
         global screenWidth
         screenWidth = self.winfo_width()
     
@@ -101,8 +100,7 @@ class TestingScreen(CTk.CTkFrame):
     def move_dot(self):
         #move = True
         
-        if not self.is_moving:
-            return
+       
            
     
         # Update the dot's position
@@ -118,14 +116,13 @@ class TestingScreen(CTk.CTkFrame):
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)
 
         # Repeat the animation every 10 milliseconds
+        if self.is_moving:
+            self.after(10, self.move_dot)
         
         
-        self.after(10, self.move_dot)
 
     def reset_screen(self):
         # Reset all attributes to their initial values
-       # self.button2.place(anchor="s", relx=0.5, rely=0.5)  # Place the button back
-       # self.button2.lift()
         self.is_moving = False
         self.button2.configure(state="normal")
         self.dot_x = 960
@@ -140,8 +137,9 @@ class TestingScreen(CTk.CTkFrame):
     def return_to_main(self):
         
         self.reset_screen()
-    
+        
         self.pack_forget()
+       
         self.master.main_frame.pack(fill="both", expand=True)
 
 
