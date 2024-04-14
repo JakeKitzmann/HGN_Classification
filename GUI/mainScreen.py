@@ -1,5 +1,7 @@
 import customtkinter as CTk
 import tkinter as tk
+from record import recordVideo
+import threading 
 
 # Set the theme (optional)
 CTk.set_appearance_mode("System")  # Can be "System", "Dark", or "Light"
@@ -94,14 +96,13 @@ class TestingScreen(CTk.CTkFrame):
         #print("start test")
         self.is_moving = True
         self.speed = 6
-        print(self.speed)
         self.move_dot()
+        threading.Thread(target=recordVideo).start()
+        #record()
         
     def move_dot(self):
         #move = True
         
-       
-           
     
         # Update the dot's position
         self.dot_x += self.speed
@@ -141,6 +142,7 @@ class TestingScreen(CTk.CTkFrame):
         self.pack_forget()
        
         self.master.main_frame.pack(fill="both", expand=True)
+
 
 
 # Main
