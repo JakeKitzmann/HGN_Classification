@@ -2,12 +2,20 @@ import customtkinter as CTk
 import tkinter as tk
 from record import recordVideo
 import threading 
+from customtkinter import CTkFont
 
+from PIL import ImageFont
+
+# Load the font file
+font_path = "GUI/fonts/sofiapro-light.otf"
+sofiaPro = ImageFont.truetype(font_path, size=16)
+
+# Now you can use the font in your project
 # Set the theme (optional)
 CTk.set_appearance_mode("System")  # Can be "System", "Dark", or "Light"
 CTk.set_default_color_theme("blue")  # Sets the default color theme
 
-
+ 
 screenWidth = 0
 move = None
 
@@ -28,11 +36,17 @@ class MainApplication(CTk.CTk):
         self.testing_frame = TestingScreen(self)
         self.testing_frame.pack_forget()
 
-        #directions 
+        # Create a frame to act as the box
+        intro_box = CTk.CTkFrame(self.main_frame, width = 700, height = 400, corner_radius = 10, bg_color = "blue")
+        intro_box.place(anchor="center", relx=0.25, rely=0.5)
+
+        #intro
         directionsText = "Directions: Keep head 4-6 inches away from webcam and keep "
         HNGintro = "The Horizontal Gaze Nystagmus Test (HGN) is a screening method commonly utilized in various contexts to assess eye movement patterns. It involves tracking the movement of an object with the eyes, observing for any irregularities in the smoothness and continuity of gaze. In a typical HGN test, the subject is instructed to follow a moving target horizontally across their field of vision while maintaining a stable head position. The test aims to identify any deviations from normal eye movement patterns, which may indicate underlying physiological or neurological conditions. By analyzing the quality and consistency of gaze tracking, HGN testing can provide valuable insights into visual function and ocular health."
-        directions_text = CTk.CTkLabel(self.main_frame, text=HNGintro, wraplength= 400, font = ("Comic Sans", 18) )
-        directions_text.place(anchor="center", relx=0.25, rely=0.5)
+        directions_text = CTk.CTkLabel(intro_box, text=HNGintro, wraplength= 650, font = (sofiaPro, 24))
+        #directions_text.place(anchor="center", relx=0.25, rely=0.5)
+        directions_text.pack()
+       
 
 
         # Button on the main screen to switch to the testing screen
