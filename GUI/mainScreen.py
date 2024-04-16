@@ -19,7 +19,7 @@ class MainApplication(CTk.CTk):
 
         self.title('Main Screen')
         self.geometry('1920x1080')  # Set the size of the window
-
+     
         # Main screen frame
         self.main_frame = CTk.CTkFrame(self)
         self.main_frame.pack(fill="both", expand=True)
@@ -28,9 +28,16 @@ class MainApplication(CTk.CTk):
         self.testing_frame = TestingScreen(self)
         self.testing_frame.pack_forget()
 
+        #directions 
+        directionsText = "Directions: Keep head 4-6 inches away from webcam and keep "
+        HNGintro = "The Horizontal Gaze Nystagmus Test (HGN) is a screening method commonly utilized in various contexts to assess eye movement patterns. It involves tracking the movement of an object with the eyes, observing for any irregularities in the smoothness and continuity of gaze. In a typical HGN test, the subject is instructed to follow a moving target horizontally across their field of vision while maintaining a stable head position. The test aims to identify any deviations from normal eye movement patterns, which may indicate underlying physiological or neurological conditions. By analyzing the quality and consistency of gaze tracking, HGN testing can provide valuable insights into visual function and ocular health."
+        directions_text = CTk.CTkLabel(self.main_frame, text=HNGintro, wraplength= 400, font = ("Comic Sans", 18) )
+        directions_text.place(anchor="center", relx=0.25, rely=0.5)
+
+
         # Button on the main screen to switch to the testing screen
-        button = CTk.CTkButton(self.main_frame, text="Testing", command=self.switch_to_testing, width=300, height=80)
-        button.place(anchor="center", relx=0.5, rely=0.5)
+        button = CTk.CTkButton(self.main_frame, text="HNG Testing", command=self.switch_to_testing, width=300, height=80)
+        button.place(anchor="center", relx=0.75, rely=0.5)
       
     #switch to testing scene 
     def switch_to_testing(self):
@@ -97,7 +104,7 @@ class TestingScreen(CTk.CTkFrame):
         self.is_moving = True
         self.speed = 6
         self.move_dot()
-        threading.Thread(target=recordVideo).start()
+       # threading.Thread(target=recordVideo).start()
         #record()
         
     def move_dot(self):
