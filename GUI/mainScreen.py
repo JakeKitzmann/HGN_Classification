@@ -28,7 +28,7 @@ class MainApplication(CTk.CTk):
         self.geometry('1920x1080')  # Set the size of the window
      
         # Main screen frame
-        self.main_frame = CTk.CTkFrame(self)
+        self.main_frame = CTk.CTkFrame(self, fg_color="blue")
         self.main_frame.pack(fill="both", expand=True)
 
         # Testing screen frame (initially not visible)
@@ -42,18 +42,17 @@ class MainApplication(CTk.CTk):
 
         #Title 
         title_text = CTk.CTkLabel(intro_box, text="The HNG Test", font = (sofiaPro, 48, "bold"), text_color = "white")
-        title_text.pack()
+        title_text.pack(side = "top", pady = (screenHeight*.35, 10))
         #intro
         directionsText = "Directions: Keep head 4-6 inches away from webcam and keep "
         HNGintro = "The Horizontal Gaze Nystagmus Test (HGN) is a screening method commonly utilized in various contexts to assess eye movement patterns. It involves tracking the movement of an object with the eyes, observing for any irregularities in the smoothness and continuity of gaze. In a typical HGN test, the subject is instructed to follow a moving target horizontally across their field of vision while maintaining a stable head position. The test aims to identify any deviations from normal eye movement patterns, which may indicate underlying physiological or neurological conditions. By analyzing the quality and consistency of gaze tracking, HGN testing can provide valuable insights into visual function and ocular health."
         directions_text = CTk.CTkLabel(intro_box, text=HNGintro, wraplength= 900, font = (sofiaPro, 24), text_color = "white", justify = "left")
-        #directions_text.place(anchor="center", relx=0.25, rely=0.5)
-        directions_text.pack(fill = "both", expand = True)
+        directions_text.pack(fill = "both", pady = 10)
        
 
 
         # Button on the main screen to switch to the testing screen
-        button = CTk.CTkButton(self.main_frame, text="HNG Testing", command=self.switch_to_testing, width=300, height=80)
+        button = CTk.CTkButton(self.main_frame, text="HNG Testing", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
         button.place(anchor="center", relx=0.75, rely=0.5)
       
     #switch to testing scene 
