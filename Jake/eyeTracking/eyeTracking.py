@@ -10,6 +10,13 @@ detector_params.filterByArea = True
 detector_params.maxArea = 1500
 detector = cv2.SimpleBlobDetector_create(detector_params)
 
+class Eyes:
+    def __init__(self):
+        self.right_x = None
+        self.right_y = None
+        self.left_x = None
+        self.left_y = None
+
 
 def detect_faces(img, cascade):
     gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
