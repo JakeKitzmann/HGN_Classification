@@ -1,6 +1,6 @@
 import customtkinter as CTk
 import tkinter as tk
-from record import recordVideo
+#from record import recordVideo
 import threading 
 from PIL import ImageFont
 from tkinter import PhotoImage 
@@ -36,7 +36,7 @@ class MainApplication(CTk.CTk):
         # Testing screen frame (initially not visible)
         self.testing_frame = TestingScreen(self)
         self.testing_frame.pack_forget()
-
+        
         # Create a frame to act as the box
         intro_box = CTk.CTkFrame(self.main_frame, fg_color="#3b8ed0")
         intro_box.place(anchor="center", relx=0.25, rely=0.5)
@@ -48,25 +48,35 @@ class MainApplication(CTk.CTk):
         #intro
         directionsText = "Directions: Keep head 4-6 inches away from webcam and keep "
         HNGintro = "The Horizontal Gaze Nystagmus Test (HGN) is a screening method commonly utilized in various contexts to assess eye movement patterns. It involves tracking the movement of an object with the eyes, observing for any irregularities in the smoothness and continuity of gaze. In a typical HGN test, the subject is instructed to follow a moving target horizontally across their field of vision while maintaining a stable head position. The test aims to identify any deviations from normal eye movement patterns, which may indicate underlying physiological or neurological conditions. By analyzing the quality and consistency of gaze tracking, HGN testing can provide valuable insights into visual function and ocular health."
-        directions_text = CTk.CTkLabel(intro_box, text=HNGintro, wraplength= 900, font = (sofiaPro, 24), text_color = "white", justify = "left")
-        directions_text.pack(fill = "both", pady = 10)
-       
-
+        directions_text = CTk.CTkLabel(intro_box, text=HNGintro, wraplength= 850, font = (sofiaPro, 24), text_color = "white", justify = "left")
+        directions_text.pack(fill = "both", pady = 10, padx = 10)
+        
 
         # Button on the main screen to switch to the testing screen
         button = CTk.CTkButton(self.main_frame, text="HNG Testing", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
         button.place(anchor="center", relx=0.75, rely=0.5)
+
+        # Button to switch to search screen 
+        button = CTk.CTkButton(self.main_frame, text="Search Cases", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
+        button.place(anchor="center", relx=0.75, rely=0.6)
+        
+
+
+
       
     #switch to testing scene 
     def switch_to_testing(self):
         # Hide the main frame and show the testing frame
         self.main_frame.pack_forget()
         self.testing_frame.pack(fill="both", expand=True)
+        self.testing_frame.update_idletasks()
+        '''
         global screenWidth
         screenWidth = self.winfo_width()
     
         global screenHeight
         screenHeight = self.winfo_height()
+        '''
       
 
 
@@ -104,11 +114,11 @@ class TestingScreen(CTk.CTkFrame):
     
         
         #button to return to the main screen
-        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60)
+        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
         self.button.place(anchor="s", relx=0.05, rely=0.95)
         
         #button to begin test
-        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=250, height=60)
+        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=250, height=60,font=(sofiaPro, 18))
         self.button2.place(anchor="s", relx=0.5, rely=0.5)
         #self.button2.place()  # Place the button back
         # Start the animation
@@ -164,9 +174,12 @@ class TestingScreen(CTk.CTkFrame):
         
         self.reset_screen()
         
-        self.pack_forget()
+        self.master.testing_frame.pack_forget()
+       # self.pack_forget()
        
         self.master.main_frame.pack(fill="both", expand=True)
+        #self.master.main_frame.update()
+        self.master.main_frame.update_idletasks()
 
 
 
