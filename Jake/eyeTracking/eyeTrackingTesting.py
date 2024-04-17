@@ -125,7 +125,6 @@ def main():
         face_frame = detect_faces(frame, face_cascade)
         if face_frame is not None:
             eyes = detect_eyes(face_frame, eye_cascade)
-            i = 0
             for eye in eyes:
                 if eye is not None:
                     # threshold = adjust_threshold(face_frame, threshold, detector) # automatic threshold adjustment
@@ -133,14 +132,13 @@ def main():
                     eye = cut_eyebrows(eye)
                     keypoints , blob = blob_process(eye, threshold, detector)
                     eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-                    if i == 0:
-                        eyes.left_x, eyes.left_y = take_center(keypoints)
-                        print(f'left: {eyes.left_x}')
-                    else:
-                        eyes.right_x, eyes.right_y = take_center(keypoints)
-                        print(f'right: {eyes.right_x}')
+                    # if i == 0:
+                    #     eyes.left_x, eyes.left_y = take_center(keypoints)
+                    #     print(f'left: {eyes.left_x}')
+                    # else:
+                    #     eyes.right_x, eyes.right_y = take_center(keypoints)
+                    #     print(f'right: {eyes.right_x}')
 
-                    i+=1
         frame = cv2.flip(frame, 1)
         cv2.imshow('image', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
