@@ -3,12 +3,19 @@ import numpy as np
 
 
 # init part
-face_cascade = cv2.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_eye.xml')
 detector_params = cv2.SimpleBlobDetector_Params()
 detector_params.filterByArea = True
 detector_params.maxArea = 1500
 detector = cv2.SimpleBlobDetector_create(detector_params)
+
+class Eyes:
+    def __init__(self):
+        self.right_x = None
+        self.right_y = None
+        self.left_x = None
+        self.left_y = None
 
 
 def detect_faces(img, cascade):
@@ -71,7 +78,7 @@ def blob_process(img, threshold, detector):
             i+=1
 
         print(keypoints[0].size)
-        cv2.imshow('blob', img)
+        #cv2.imshow('blob', img)
 
     return keypoints, img
 
