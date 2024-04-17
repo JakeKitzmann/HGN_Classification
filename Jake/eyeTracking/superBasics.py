@@ -2,8 +2,8 @@ import cv2 as cv
 import numpy as np
 
 # Load Haar cascades
-eye_cascade = cv.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_eye.xml')
-face_cascade = cv.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
+eye_cascade = cv.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_eye.xml')
+face_cascade = cv.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
 
 # Load img detector parameters
 detector_params = cv.SimpleBlobDetector_Params()
@@ -12,7 +12,7 @@ detector_params.maxArea = 1500
 detector = cv.SimpleBlobDetector_create(detector_params)
 
 #load image
-img = cv.imread('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/Photos/woman.jpg')
+img = cv.imread('Jake/Resources/Photos/woman.jpg')
 
 cv.imshow('Woman Raw', img)
 

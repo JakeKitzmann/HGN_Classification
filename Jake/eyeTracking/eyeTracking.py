@@ -78,7 +78,7 @@ def blob_process(img, threshold, detector):
             i+=1
 
         print(keypoints[0].size)
-        cv2.imshow('blob', img)
+       # cv2.imshow('blob', img)
 
     return keypoints, img
 
