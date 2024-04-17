@@ -3,6 +3,7 @@ import tkinter as tk
 from record import recordVideo
 import threading 
 from PIL import ImageFont
+from tkinter import PhotoImage 
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
@@ -26,19 +27,20 @@ class MainApplication(CTk.CTk):
 
         self.title('Main Screen')
         self.geometry('1920x1080')  # Set the size of the window
-     
+
         # Main screen frame
-        self.main_frame = CTk.CTkFrame(self, fg_color="blue")
+        self.main_frame = CTk.CTkFrame(self)
         self.main_frame.pack(fill="both", expand=True)
 
+       
         # Testing screen frame (initially not visible)
         self.testing_frame = TestingScreen(self)
         self.testing_frame.pack_forget()
 
         # Create a frame to act as the box
-        intro_box = CTk.CTkFrame(self.main_frame, corner_radius=10, fg_color="#3b8ed0")
+        intro_box = CTk.CTkFrame(self.main_frame, fg_color="#3b8ed0")
         intro_box.place(anchor="center", relx=0.25, rely=0.5)
-        intro_box.place_configure(width=screenWidth/2, height=screenHeight)
+        intro_box.place_configure(width=screenWidth/1.98, height=screenHeight+5)
 
         #Title 
         title_text = CTk.CTkLabel(intro_box, text="The HNG Test", font = (sofiaPro, 48, "bold"), text_color = "white")
@@ -102,8 +104,8 @@ class TestingScreen(CTk.CTkFrame):
     
         
         #button to return to the main screen
-        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=300, height=80)
-        self.button.place(anchor="s", relx=0.5, rely=0.95)
+        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60)
+        self.button.place(anchor="s", relx=0.05, rely=0.95)
         
         #button to begin test
         self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=250, height=60)
