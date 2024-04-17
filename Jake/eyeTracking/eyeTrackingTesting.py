@@ -26,6 +26,8 @@ def detect_faces(img, cascade):
         return None
     for (x, y, w, h) in biggest:
         frame = img[y:y + h, x:x + w]
+
+    #print('face at time: ', cv2.getTickCount())
     return frame
 
 
@@ -111,7 +113,8 @@ def main():
                     eyeNum += 1
                     thresholdedFrame.resize(eyeFrame.shape)
                     if keypoints:
-                        cv2.imshow('eyeFrame', eyeFrame)
+                        #eyecv2.imshow('eyeFrame', eyeFrame)
+                        pass
 
         frame = cv2.flip(frame, 1)
         cv2.imshow('image', frame)
