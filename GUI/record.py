@@ -33,7 +33,7 @@ def recordVideo():
     cv2.destroyAllWindows()
     print("recording ended")
 
-
+recordVideo()
 
 '''
 def recordVideo():

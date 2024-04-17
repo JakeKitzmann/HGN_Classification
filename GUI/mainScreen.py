@@ -1,6 +1,6 @@
 import customtkinter as CTk
 import tkinter as tk
-from record import recordVideo
+#from record import recordVideo
 import threading 
 from PIL import ImageFont
 from tkinter import PhotoImage 
@@ -57,6 +57,8 @@ class MainApplication(CTk.CTk):
         button.place(anchor="center", relx=0.75, rely=0.5)
 
         # Button to switch to search screen 
+        button = CTk.CTkButton(self.main_frame, text="Search Cases", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
+        button.place(anchor="center", relx=0.75, rely=0.25)
         
 
 
