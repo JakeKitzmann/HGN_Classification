@@ -37,3 +37,6 @@ for (ex, ey, ew, eh) in eyes:
     cv.rectangle(face, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
 
 cv.imshow('Eye Segmentation', img) # notice the problem with eyes detected around nose and mouth
+# Wait for a key press and close all windows
+cv.waitKey(0)
+cv.destroyAllWindows()

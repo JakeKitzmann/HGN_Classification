@@ -10,6 +10,13 @@ detector_params.filterByArea = True
 detector_params.maxArea = 1500
 detector = cv2.SimpleBlobDetector_create(detector_params)
 
+class Eyes:
+    def __init__(self):
+        self.right_x = None
+        self.right_y = None
+        self.left_x = None
+        self.left_y = None
+
 
 def detect_faces(img, cascade):
     gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -44,7 +51,6 @@ def detect_eyes(img, cascade):
             left_eye = img[y:y + h, x:x + w]
         else:
             right_eye = img[y:y + h, x:x + w]
-   # print(f'eye at time: {cv2.getTickCount()}')
     return left_eye, right_eye
 
 
@@ -56,63 +62,85 @@ def cut_eyebrows(img):
     return img
 
 
-def blob_process(img, threshold, detector, eye):
-
-    gray_eye = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray_eye = cv2.GaussianBlur(gray_eye, (9, 9), 0)
-    gray_eye = cv2.medianBlur(gray_eye, 3)
-    
-
-    _, img = cv2.threshold(gray_eye, threshold, 255, cv2.THRESH_BINARY)
+def blob_process(img, threshold, detector):
+    gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, img = cv2.threshold(gray_frame, threshold, 255, cv2.THRESH_BINARY)
     img = cv2.erode(img, None, iterations=2)
-    img = cv2.erode(img, None, iterations=7)
+    img = cv2.dilate(img, None, iterations=5)
+    img = cv2.medianBlur(img, 5)
     keypoints = detector.detect(img)
 
-    if len(keypoints) > 1:
-        # calculate the center of the image
-        h, w = img.shape[:2]
-        center = (w / 2, h / 2)
+    if keypoints:
+        i = 0
+        for keypoint in keypoints:
+            if keypoint.size <10:
+                keypoints[i].size = 0
+            i+=1
 
-        # calculate the distance of each keypoint from the center
-        distances = [cv2.norm((kp.pt[0] - center[0], kp.pt[1] - center[1])) for kp in keypoints]
+        print(keypoints[0].size)
+        cv2.imshow('blob', img)
 
-        # find the index of the keypoint closest to the center
-        closest_index = np.argmin(distances)
+    return keypoints, img
 
-        # keep only the closest keypoint
-        keypoints = [keypoints[closest_index]]
-
-
-    return keypoints, img, gray_eye
-
+def take_center(keypoints):
+    if keypoints:
+        # Get the first keypoint
+        k = keypoints[0]
+        # Get the x, y coordinates and size of the keypoint
+        x = k.pt[0]
+        y = k.pt[1]
+        # Return the center of the keypoint
+        return int(x), int(y)
+    else:
+        return None
+    
+def adjust_threshold(img, initial_threshold, detector):
+    threshold = initial_threshold
+    for _ in range(255):  # range of possible threshold values
+        keypoints = blob_process(img, threshold, detector)
+        if len(keypoints) == 2:  # if two keypoints are detected (for two eyes)
+            return threshold  # return the current threshold
+        elif len(keypoints) < 2:  # if less than two keypoints are detected
+            threshold += 1  # increase the threshold
+        else:  # if more than two keypoints are detected
+            threshold -= 1  # decrease the threshold
+        if threshold < 0 or threshold > 255:  # if threshold is out of range
+            break
+    return threshold  # return the final threshold after the loop
 
 def nothing(x):
     pass
+
+
 
 
 def main():
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('image')
     cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
-    
-    
+    threshold = 20
+    eyes = Eyes()
     while True:
         _, frame = cap.read()
         face_frame = detect_faces(frame, face_cascade)
         if face_frame is not None:
             eyes = detect_eyes(face_frame, eye_cascade)
-            eyeNum = 0
+            i = 0
             for eye in eyes:
                 if eye is not None:
+                    # threshold = adjust_threshold(face_frame, threshold, detector) # automatic threshold adjustment
                     threshold  = cv2.getTrackbarPos('threshold', 'image')
                     eye = cut_eyebrows(eye)
-                    keypoints, thresholdedFrame, eyeFrame = blob_process(eye, threshold, detector, eyeNum)
-                    
-                    eyeNum += 1
-                    thresholdedFrame.resize(eyeFrame.shape)
-                    if keypoints:
-                        cv2.imshow('eyeFrame', eyeFrame)
+                    keypoints , blob = blob_process(eye, threshold, detector)
+                    eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                    if i == 0:
+                        eyes.left_x, eyes.left_y = take_center(keypoints)
+                        print(f'left: {eyes.left_x}')
+                    else:
+                        eyes.right_x, eyes.right_y = take_center(keypoints)
+                        print(f'right: {eyes.right_x}')
 
+                    i+=1
         frame = cv2.flip(frame, 1)
         cv2.imshow('image', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
