@@ -3,7 +3,6 @@ import tkinter as tk
 #from record import recordVideo
 import threading 
 from PIL import ImageFont
-from tkinter import PhotoImage 
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
@@ -36,7 +35,12 @@ class MainApplication(CTk.CTk):
         # Testing screen frame (initially not visible)
         self.testing_frame = TestingScreen(self)
         self.testing_frame.pack_forget()
-        
+
+        #Search frame(intially not visivle)
+        self.search_frame = SearchScreen(self)
+        self.search_frame.pack_forget()
+
+
         # Create a frame to act as the box
         intro_box = CTk.CTkFrame(self.main_frame, fg_color="#3b8ed0")
         intro_box.place(anchor="center", relx=0.25, rely=0.5)
@@ -57,12 +61,9 @@ class MainApplication(CTk.CTk):
         button.place(anchor="center", relx=0.75, rely=0.5)
 
         # Button to switch to search screen 
-        button = CTk.CTkButton(self.main_frame, text="Search Cases", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
+        button = CTk.CTkButton(self.main_frame, text="Search Cases", command=self.switch_to_search, width=300, height=80, font=(sofiaPro, 18))
         button.place(anchor="center", relx=0.75, rely=0.6)
         
-
-
-
       
     #switch to testing scene 
     def switch_to_testing(self):
@@ -70,17 +71,13 @@ class MainApplication(CTk.CTk):
         self.main_frame.pack_forget()
         self.testing_frame.pack(fill="both", expand=True)
         self.testing_frame.update_idletasks()
-        '''
-        global screenWidth
-        screenWidth = self.winfo_width()
-    
-        global screenHeight
-        screenHeight = self.winfo_height()
-        '''
-      
 
-
-
+    #switch to search scene
+    def switch_to_search(self):
+        self.main_frame.pack_forget()
+        self.search_frame.pack(fill="both", expand=True)
+        self.search_frame.update_idletasks()
+   
 
 ###########################################################################################################################################
 #this screen will have the dot moving for the eye tracking test.
@@ -180,6 +177,31 @@ class TestingScreen(CTk.CTkFrame):
         self.master.main_frame.pack(fill="both", expand=True)
         #self.master.main_frame.update()
         self.master.main_frame.update_idletasks()
+
+##################################################################################################################################
+class SearchScreen(CTk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.canvas = CTk.CTkCanvas(self, width=screenWidth, height=screenHeight, highlightthickness=0)
+        self.canvas.pack()
+
+
+        #return to main button 
+        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
+        self.button.place(anchor="s", relx=0.05, rely=0.95)
+
+
+    def return_to_main(self):
+       # self.reset_screen()
+        
+        self.master.search_frame.pack_forget()
+       # self.pack_forget()
+       
+        self.master.main_frame.pack(fill="both", expand=True)
+        #self.master.main_frame.update()
+        self.master.main_frame.update_idletasks()
+        
 
 
 
