@@ -3,8 +3,8 @@ import numpy as np
 
 
 # init part
-face_cascade = cv2.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('/Users/jacob_kitz/Desktop/hgn_processing/HGN_Classification/Jake/Resources/HaarCascades/haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_eye.xml')
 detector_params = cv2.SimpleBlobDetector_Params()
 detector_params.filterByArea = True
 detector_params.maxArea = 1500
