@@ -179,22 +179,48 @@ class TestingScreen(CTk.CTkFrame):
         self.master.main_frame.update_idletasks()
 
 ##################################################################################################################################
+global caseFound
 class SearchScreen(CTk.CTkFrame):
+    caseFound = False 
     def __init__(self, parent):
         super().__init__(parent)
 
         self.canvas = CTk.CTkCanvas(self, width=screenWidth, height=screenHeight, highlightthickness=0)
         self.canvas.pack()
 
+        
+        #search box label 
+        searchLabel = CTk.CTkLabel(self, text = "Search by case", font = (sofiaPro, 34, "bold"), bg_color= "#f0f0f0", fg_color= "#f0f0f0")
+        searchLabel.place(anchor = "s", relx = .5, rely = .45)
 
+        #search field 
+        self.search_field = CTk.CTkEntry(self, width = 250, font = (sofiaPro, 16), placeholder_text="Enter case number here")
+        self.search_field.place(anchor = "s", relx = .5, rely = .5)
+
+        #is case number in data base?
+       
+      
         #return to main button 
         self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
         self.button.place(anchor="s", relx=0.05, rely=0.95)
 
+        def on_enter_pressed(event):
+            user_input = self.search_field.get()
+            # search database for case number
+            caseResults(user_input)
+
+        # Bind the <Return> key event to the search field
+        self.search_field.bind("<Return>", on_enter_pressed)
+
+        #handle what the database sends about the case number 
+        def caseResults(user_input):
+            print("Case number =", user_input)
+
 
     def return_to_main(self):
        # self.reset_screen()
-        
+        self.search_field.delete(0, 'end')
+        self.search_field._placeholder_text = "Enter case number here"
         self.master.search_frame.pack_forget()
        # self.pack_forget()
        
