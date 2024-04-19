@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import csv
 
 
 # init part
@@ -89,6 +90,10 @@ def take_center(keypoints):
         # Get the x, y coordinates and size of the keypoint
         x = k.pt[0]
         y = k.pt[1]
+        # Write the x and y values to eyeCords.csv
+        with open('eyeCords.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([x, y])
         # Return the center of the keypoint
         return int(x), int(y)
     else:
