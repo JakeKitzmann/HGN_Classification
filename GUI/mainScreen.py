@@ -7,6 +7,7 @@ import firebase_admin   # pip install firebase_admin
 from firebase_admin import db as firebase_db, credentials
 import socket
 import json
+import time
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
@@ -25,6 +26,11 @@ CTk.set_default_color_theme("blue")  # Sets the default color theme
 screenWidth = 1920
 screenHeight = 1080
 move = None
+
+################
+# REMOVE LATER #
+################
+eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
 
 ################################################################################################################################################
 #main start screen
@@ -142,6 +148,14 @@ class TestingScreen(CTk.CTkFrame):
         message = json.dumps(data)
         self.client_socket.sendall(message.encode())
 
+    # Function to send eye tracking data continously
+    def send_eye_tracking_data_continously(self):
+        # Simulate sending eye tracking data after updating dot's position
+        for x_position in eye_positions:
+            self.send_eye_tracking_data(x_position)
+            # Sleep for short time to simulate eye movement
+            time.sleep(1)
+
 
     #start the test and flag is_moving as true 
     def start_test(self):
@@ -149,8 +163,12 @@ class TestingScreen(CTk.CTkFrame):
         #print("start test")
         self.is_moving = True
         self.speed = 6
-        self.send_eye_tracking_data(960)    # Simulate initial eye positon
-        self.move_dot()
+
+        threading.Thread(target=self.move_dot).start()
+
+        threading.Thread(target=self.send_eye_tracking_data_continously).start()
+
+        #self.move_dot()
        # threading.Thread(target=recordVideo).start()
         #record()
         
@@ -169,7 +187,7 @@ class TestingScreen(CTk.CTkFrame):
         # Move the dot
         self.canvas.coords(self.dot, self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)
-
+        
         # Repeat the animation every 10 milliseconds
         if self.is_moving:
             self.after(10, self.move_dot)
