@@ -5,13 +5,15 @@ import threading
 from PIL import ImageFont
 import firebase_admin   # pip install firebase_admin
 from firebase_admin import db as firebase_db, credentials
+import socket
+import json
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
 sofiaPro = ImageFont.truetype(font_path, size=16)
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("This will contain Service Account Key ")
+cred = credentials.Certificate("GUI\ServiceAccountKey.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://iot-term-project-4c046-default-rtdb.firebaseio.com/'})
 
 # Now you can use the font in your project
@@ -91,6 +93,11 @@ class TestingScreen(CTk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
 
+        # Initialize socket connection to server
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_address = ('192.168.1.5', 4000)
+        self.client_socket.connect(self.server_address)
+
         #self.title("Moving Dot")
         #self.geometry("1920x1080")
        # self.configure(bg="white")
@@ -127,6 +134,14 @@ class TestingScreen(CTk.CTkFrame):
         # Start the animation
         #self.move_dot()
 
+    # Function to send eye tracking data to the server
+    def send_eye_tracking_data(self, x_position):
+        data = {
+            'x_position': x_position
+        }
+        message = json.dumps(data)
+        self.client_socket.sendall(message.encode())
+
 
     #start the test and flag is_moving as true 
     def start_test(self):
@@ -134,6 +149,7 @@ class TestingScreen(CTk.CTkFrame):
         #print("start test")
         self.is_moving = True
         self.speed = 6
+        self.send_eye_tracking_data(960)    # Simulate initial eye positon
         self.move_dot()
        # threading.Thread(target=recordVideo).start()
         #record()
