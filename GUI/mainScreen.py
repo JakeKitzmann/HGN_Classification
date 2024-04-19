@@ -3,10 +3,19 @@ import tkinter as tk
 #from record import recordVideo
 import threading 
 from PIL import ImageFont
+import firebase_admin   # pip install firebase_admin
+from firebase_admin import db as firebase_db, credentials
+import socket
+import json
+import time
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
 sofiaPro = ImageFont.truetype(font_path, size=16)
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate("GUI\ServiceAccountKey.json")
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://iot-term-project-4c046-default-rtdb.firebaseio.com/'})
 
 # Now you can use the font in your project
 # Set the theme (optional)
@@ -17,6 +26,11 @@ CTk.set_default_color_theme("blue")  # Sets the default color theme
 screenWidth = 1920
 screenHeight = 1080
 move = None
+
+################
+# REMOVE LATER #
+################
+eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
 
 ################################################################################################################################################
 #main start screen
@@ -85,6 +99,11 @@ class TestingScreen(CTk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
 
+        # Initialize socket connection to server
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_address = ('192.168.1.5', 4000)
+        self.client_socket.connect(self.server_address)
+
         #self.title("Moving Dot")
         #self.geometry("1920x1080")
        # self.configure(bg="white")
@@ -121,6 +140,22 @@ class TestingScreen(CTk.CTkFrame):
         # Start the animation
         #self.move_dot()
 
+    # Function to send eye tracking data to the server
+    def send_eye_tracking_data(self, x_position):
+        data = {
+            'x_position': x_position
+        }
+        message = json.dumps(data)
+        self.client_socket.sendall(message.encode())
+
+    # Function to send eye tracking data continously
+    def send_eye_tracking_data_continously(self):
+        # Simulate sending eye tracking data after updating dot's position
+        for x_position in eye_positions:
+            self.send_eye_tracking_data(x_position)
+            # Sleep for short time to simulate eye movement
+            time.sleep(1)
+
 
     #start the test and flag is_moving as true 
     def start_test(self):
@@ -128,7 +163,12 @@ class TestingScreen(CTk.CTkFrame):
         #print("start test")
         self.is_moving = True
         self.speed = 6
-        self.move_dot()
+
+        threading.Thread(target=self.move_dot).start()
+
+        threading.Thread(target=self.send_eye_tracking_data_continously).start()
+
+        #self.move_dot()
        # threading.Thread(target=recordVideo).start()
         #record()
         
@@ -147,7 +187,7 @@ class TestingScreen(CTk.CTkFrame):
         # Move the dot
         self.canvas.coords(self.dot, self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)
-
+        
         # Repeat the animation every 10 milliseconds
         if self.is_moving:
             self.after(10, self.move_dot)
@@ -214,8 +254,14 @@ class SearchScreen(CTk.CTkFrame):
 
         #handle what the database sends about the case number 
         def caseResults(user_input):
-            print("Case number =", user_input)
+            ref = firebase_db.reference('/Case Numbers')
+            snapshot = ref.order_by_key().equal_to(user_input).get()
 
+            if snapshot:
+                print("Case number found. Data: ", snapshot[user_input])
+            else:
+                print("Case number not found.")
+            #print("Case number =", user_input)
 
     def return_to_main(self):
        # self.reset_screen()
