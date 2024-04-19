@@ -10,7 +10,6 @@ detector_params = cv2.SimpleBlobDetector_Params()
 detector_params.filterByArea = True
 detector_params.maxArea = 1500
 detector = cv2.SimpleBlobDetector_create(detector_params)
-eye_side = 'left'
 class Eyes:
     def __init__(self):
         self.right_x = None
@@ -94,18 +93,20 @@ def take_center(keypoints):
         x = k.pt[0]
         y = k.pt[1]
         # Return the center of the keypoint
-        return int(x), int(y)
+        return x,y
     else:
         return None
 
-def save_Cords(center):
-    global eye_side
+def save_Cords(eye_side, center):
     # Write the x, y coordinates to the CSV file
-    x = center[0]
-    y = center[1]
-    with open('eyeCords.csv', 'a', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow([x, y, eye_side])
+    try:
+        with open('eyeCords.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([center[0], center[1], eye_side])
+        print("Successfully wrote to file.")
+    except Exception as e:
+        print("Failed to write to file:", e)
+    
     
 def adjust_threshold(img, initial_threshold, detector):
     threshold = initial_threshold
@@ -128,6 +129,8 @@ def nothing(x):
 
 
 def main():
+    global eye_side
+    eye_side = 'right'
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('image')
     cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
@@ -146,7 +149,7 @@ def main():
                     eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
                     center = take_center(keypoints)
                     if center is not None:
-                        save_Cords(center)
+                        save_Cords(eye_side,center)
                         print(f'center: {center}')
         frame = cv2.flip(frame, 1)
         cv2.imshow('image', frame)
