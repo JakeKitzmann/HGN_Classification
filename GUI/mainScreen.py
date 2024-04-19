@@ -3,10 +3,16 @@ import tkinter as tk
 #from record import recordVideo
 import threading 
 from PIL import ImageFont
+import firebase_admin   # pip install firebase_admin
+from firebase_admin import db as firebase_db, credentials
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
 sofiaPro = ImageFont.truetype(font_path, size=16)
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate("This will contain Service Account Key ")
+firebase_admin.initialize_app(cred, {'databaseURL': 'https://iot-term-project-4c046-default-rtdb.firebaseio.com/'})
 
 # Now you can use the font in your project
 # Set the theme (optional)
