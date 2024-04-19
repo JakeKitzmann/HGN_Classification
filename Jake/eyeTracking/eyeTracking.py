@@ -4,8 +4,8 @@ import csv
 
 
 # init part
-face_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('C:\\Users\\rutge\\OneDrive - University of Iowa\\IOT\\IOT Project\\IOT Project git\\HGN_Classification\\Jake\\Resources\\HaarCascades\\haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('C:\\Users\\rutge\\OneDrive - University of Iowa\\IOT\\IOT Project\\IOT Project git\\HGN_Classification\\Jake\\Resources\\HaarCascades\\haarcascade_eye.xml')
 detector_params = cv2.SimpleBlobDetector_Params()
 detector_params.filterByArea = True
 detector_params.maxArea = 1500
@@ -95,7 +95,7 @@ def take_center(keypoints):
             writer = csv.writer(file)
             writer.writerow([x, y])
         # Return the center of the keypoint
-        return int(x), int(y)
+        return x, y
     else:
         return None
     
