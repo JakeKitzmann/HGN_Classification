@@ -214,8 +214,14 @@ class SearchScreen(CTk.CTkFrame):
 
         #handle what the database sends about the case number 
         def caseResults(user_input):
-            print("Case number =", user_input)
+            ref = firebase_db.reference('/Case Numbers')
+            snapshot = ref.order_by_key().equal_to(user_input).get()
 
+            if snapshot:
+                print("Case number found. Data: ", snapshot[user_input])
+            else:
+                print("Case number not found.")
+            #print("Case number =", user_input)
 
     def return_to_main(self):
        # self.reset_screen()
