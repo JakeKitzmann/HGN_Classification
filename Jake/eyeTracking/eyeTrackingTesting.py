@@ -1,20 +1,16 @@
 import cv2
 import numpy as np
+import csv
 
 
 # init part
-<<<<<<< HEAD
 face_cascade = cv2.CascadeClassifier('C:\\Users\\rutge\\OneDrive - University of Iowa\\IOT\\IOT Project\\IOT Project git\\HGN_Classification\\Jake\\Resources\\HaarCascades\\haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('C:\\Users\\rutge\\OneDrive - University of Iowa\\IOT\\IOT Project\\IOT Project git\\HGN_Classification\\Jake\\Resources\\HaarCascades\\haarcascade_eye.xml')
-=======
-face_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('Jake/Resources/HaarCascades/haarcascade_eye.xml')
->>>>>>> 5a78863bac063001e03bf59834e23d3f71b39dc5
 detector_params = cv2.SimpleBlobDetector_Params()
 detector_params.filterByArea = True
 detector_params.maxArea = 1500
 detector = cv2.SimpleBlobDetector_create(detector_params)
-
+eye_side = 'left'
 class Eyes:
     def __init__(self):
         self.right_x = None
@@ -42,6 +38,7 @@ def detect_faces(img, cascade):
 
 
 def detect_eyes(img, cascade):
+    global eye_side
     gray_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     eyes = cascade.detectMultiScale(gray_frame, 1.3, 5)  # detect eyes
     width = np.size(img, 1)  # get face frame width
@@ -54,8 +51,10 @@ def detect_eyes(img, cascade):
         eyecenter = x + w / 2  # get the eye center
         if eyecenter < width * 0.5:
             left_eye = img[y:y + h, x:x + w]
+            eye_side = 'left'
         else:
             right_eye = img[y:y + h, x:x + w]
+            eye_side = 'right'
     return left_eye, right_eye
 
 
@@ -98,6 +97,15 @@ def take_center(keypoints):
         return int(x), int(y)
     else:
         return None
+
+def save_Cords(center):
+    global eye_side
+    # Write the x, y coordinates to the CSV file
+    x = center[0]
+    y = center[1]
+    with open('eyeCords.csv', 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([x, y, eye_side])
     
 def adjust_threshold(img, initial_threshold, detector):
     threshold = initial_threshold
@@ -124,7 +132,6 @@ def main():
     cv2.namedWindow('image')
     cv2.createTrackbar('threshold', 'image', 0, 255, nothing)
     threshold = 20
-    eyes = Eyes()
     while True:
         _, frame = cap.read()
         face_frame = detect_faces(frame, face_cascade)
@@ -137,13 +144,10 @@ def main():
                     eye = cut_eyebrows(eye)
                     keypoints , blob = blob_process(eye, threshold, detector)
                     eye = cv2.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-                    # if i == 0:
-                    #     eyes.left_x, eyes.left_y = take_center(keypoints)
-                    #     print(f'left: {eyes.left_x}')
-                    # else:
-                    #     eyes.right_x, eyes.right_y = take_center(keypoints)
-                    #     print(f'right: {eyes.right_x}')
-
+                    center = take_center(keypoints)
+                    if center is not None:
+                        save_Cords(center)
+                        print(f'center: {center}')
         frame = cv2.flip(frame, 1)
         cv2.imshow('image', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
