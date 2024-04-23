@@ -50,10 +50,10 @@ def detect_eyes(img, cascade):
         eyecenter = x + w / 2  # get the eye center
         if eyecenter < width * 0.5:
             left_eye = img[y:y + h, x:x + w]
-            eye_side = 'left'
+            eye_side = 0
         else:
             right_eye = img[y:y + h, x:x + w]
-            eye_side = 'right'
+            eye_side = 1
     return left_eye, right_eye
 
 
@@ -102,7 +102,7 @@ def save_Cords(eye_side, center):
     try:
         with open('eyeCords.csv', 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([center[0], center[1], eye_side])
+            writer.writerow([center[0], center[1], eye_side, '0'])
         print("Successfully wrote to file.")
     except Exception as e:
         print("Failed to write to file:", e)
