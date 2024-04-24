@@ -14,7 +14,7 @@ font_path = "GUI/fonts/sofiapro-light.otf"
 sofiaPro = ImageFont.truetype(font_path, size=16)
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("GUI\ServiceAccountKey.json")
+cred = credentials.Certificate("GUI/ServiceAccountKey.json")
 firebase_admin.initialize_app(cred, {'databaseURL': 'https://iot-term-project-4c046-default-rtdb.firebaseio.com/'})
 
 # Now you can use the font in your project
@@ -101,7 +101,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('192.168.1.5', 4000)
+        self.server_address = ('0.0.0.0', 4000)
         self.client_socket.connect(self.server_address)
 
         #self.title("Moving Dot")
