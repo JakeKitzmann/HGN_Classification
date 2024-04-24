@@ -1,0 +1,89 @@
+    
+    # # class init
+    # pt = PupilTracker.PupilTracker()
+
+    # # video capture
+    # cap = cv.VideoCapture(0)
+    # cv.namedWindow('image')
+    # cv.createTrackbar('threshold', 'image', 0, 255, nothing)
+    # threshold = 20
+
+    # # position storage for each eye
+    # leftEye = Eye.Eye()
+    # rightEye = Eye.Eye()
+
+    # # magnitude storage for each eye (pupil to center of eye vector magnitude)
+    # leftEyeVectors = []
+    # rightEyeVectors = []
+    
+    # # data acquisition loop
+    # while True:
+    #     _, frame = cap.read()
+
+    #     # commented out to allow for eye detection w/o full face detection
+    #     face_frame = pt.detect_faces(frame)
+    #     if face_frame is not None:
+
+    #         eyeA, eyeB, sides = pt.detect_eyes(frame)
+    #         eyes = [eyeA, eyeB]
+
+    #         idx = 0 # index for sides
+
+    #         # for each eye edtected
+    #         for eye in eyes:
+    #             if eye is not None:
+
+    #                 # keypoint acquisition
+    #                 threshold  = cv.getTrackbarPos('threshold', 'image')
+    #                 eye = pt.cut_eyebrows(eye)
+    #                 keypoints = pt.blob_process(eye, threshold)
+    #                 eye = cv.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    #                 # keypoint storage
+    #                 if keypoints is not None:
+    #                     if sides[idx] == 0:
+    #                         leftEye.x, leftEye.y = keypoints[0].pt[0], keypoints[0].pt[1]
+    #                         leftEye.center_x, leftEye.center_y = eye.shape[1] / 2, eye.shape[0] / 2
+    #                     else:
+    #                         rightEye.x, rightEye.y = keypoints[0].pt[0], keypoints[0].pt[1]
+    #                         rightEye.center_x, rightEye.center_y = eye.shape[1] / 2, eye.shape[0] / 2
+
+    #                 idx += 1 # increment index
+        
+    #     # debug
+    #     print('---------')
+    #     print('Left Eye: ', leftEye.x, leftEye.y)
+    #     print('Right Eye: ', rightEye.x, rightEye.y)
+
+    #     # magnitude calculation and storage
+    #     if leftEye.x is not None and rightEye.x is not None:
+    #         magnitudeL= leftEye.magnitude()
+    #         print('Left Eye Center to Pupil Vector Magnitude: ', magnitudeL)
+    #         MagnitudeR = rightEye.magnitude()
+    #         print('Right Eye Center to Pupil Vector Magnitude: ', MagnitudeR)
+
+    #         # storage
+    #         leftEyeVectors.append(magnitudeL)
+    #         rightEyeVectors.append(MagnitudeR)
+
+           
+    #     # look like mirror
+    #     frame = cv.flip(frame, 1)
+
+    #     # display
+    #     cv.imshow('image', frame)
+
+    #     # exit condition
+    #     if cv.waitKey(1) & 0xFF == ord('q'):
+
+    #         # write to csv
+    #         with open('Jake/output.csv', 'a', newline='') as file:
+    #             writer = csv.writer(file)
+
+    #             for i in range(len(leftEyeVectors)):
+    #                 writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
+
+    #         cap.release()
+    #         cv.destroyAllWindows()
+
+    #         break
