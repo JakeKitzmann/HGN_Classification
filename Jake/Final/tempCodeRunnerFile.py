@@ -1,2 +1,0 @@
-
-            for eye in eyes:
