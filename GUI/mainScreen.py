@@ -171,7 +171,7 @@ class TestingScreen(CTk.CTkFrame):
        # threading.Thread(target=self.move_dot).start()
 
         #threading.Thread(target=self.send_eye_tracking_data_continously).start()
-        #record = threading.Thread(target=recordVideo).start()
+        record = threading.Thread(target=recordVideo).start()
         time.sleep(2)
 
     
