@@ -11,13 +11,13 @@ def recordVideo():
         return
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_file = 'GUI/videoTests/output.mp4'
+    output_file = 'GUI/videoTests/longTest.mp4'
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     out = cv2.VideoWriter(output_file, fourcc, 20.0, (frame_width, frame_height))
 
     start_time = time.time()
-    recording_duration = 5  # Duration in seconds
+    recording_duration = 20  # Duration in seconds
 
     while cap.isOpened() and time.time() - start_time < recording_duration:
         ret, frame = cap.read()
@@ -33,7 +33,7 @@ def recordVideo():
     cv2.destroyAllWindows()
     print("recording ended")
 
-recordVideo()
+
 
 '''
 def recordVideo():
