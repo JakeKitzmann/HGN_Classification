@@ -1,6 +1,6 @@
 import customtkinter as CTk
 import tkinter as tk
-#from record import recordVideo
+from record import recordVideo
 import threading 
 from PIL import ImageFont
 import firebase_admin   # pip install firebase_admin
@@ -8,6 +8,7 @@ from firebase_admin import db as firebase_db, credentials
 import socket
 import json
 import time
+
 
 # Load the font file
 font_path = "GUI/fonts/sofiapro-light.otf"
@@ -25,6 +26,7 @@ CTk.set_default_color_theme("blue")  # Sets the default color theme
  
 screenWidth = 1920
 screenHeight = 1080
+currentTime = 0
 move = None
 
 ################
@@ -119,7 +121,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Dot's movement speed
         self.speed = 6
-
+    
         self.is_moving = False
         # Draw the initial dot
         
@@ -156,21 +158,25 @@ class TestingScreen(CTk.CTkFrame):
             # Sleep for short time to simulate eye movement
             time.sleep(1)
 
-
+   
     #start the test and flag is_moving as true 
+    
     def start_test(self):
+        
         self.button2.configure(state="disabled")
         #print("start test")
         self.is_moving = True
-        self.speed = 6
+        self.speed = 8
 
-        threading.Thread(target=self.move_dot).start()
+       # threading.Thread(target=self.move_dot).start()
 
-        threading.Thread(target=self.send_eye_tracking_data_continously).start()
+        #threading.Thread(target=self.send_eye_tracking_data_continously).start()
+        record = threading.Thread(target=recordVideo).start()
+        time.sleep(2)
 
-        #self.move_dot()
-       # threading.Thread(target=recordVideo).start()
-        #record()
+    
+        self.move_dot()
+     
         
     def move_dot(self):
         #move = True
@@ -188,7 +194,12 @@ class TestingScreen(CTk.CTkFrame):
         self.canvas.coords(self.dot, self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)
         
-        # Repeat the animation every 10 milliseconds
+        #turn off after 20 seconds
+        elapsed_time = time.time() - currentTime
+
+    # Convert elapsed time to integer to truncate the decimal part
+
+        # Repeat the animation every 10 milliseconds    
         if self.is_moving:
             self.after(10, self.move_dot)
         
