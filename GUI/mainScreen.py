@@ -56,6 +56,10 @@ class MainApplication(CTk.CTk):
         self.search_frame = SearchScreen(self)
         self.search_frame.pack_forget()
 
+        #wait for resutls frame( initially not visible)
+        self.caseResult_frame = caseResult(self)
+        self.caseResult_frame.pack_forget()
+
 
         # Create a frame to act as the box
         intro_box = CTk.CTkFrame(self.main_frame, fg_color="#3b8ed0")
@@ -97,6 +101,7 @@ class MainApplication(CTk.CTk):
 
 ###########################################################################################################################################
 #this screen will have the dot moving for the eye tracking test.
+caseNumber = 0
 class TestingScreen(CTk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -106,11 +111,11 @@ class TestingScreen(CTk.CTkFrame):
         self.server_address = ('0.0.0.0', 4000)
         self.client_socket.connect(self.server_address)
 
-        #self.title("Moving Dot")
-        #self.geometry("1920x1080")
-       # self.configure(bg="white")
+        #GET NEXT AVAILABLE CASE NUMBER FROM FIRE BASE HERE 
+        caseNumber = 111
 
         self.canvas = CTk.CTkCanvas(self, width=1920, height=1080, bg="white", highlightthickness=0)
+    
         self.canvas.pack()
 
         # Initial dot position
@@ -121,7 +126,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Dot's movement speed
         self.speed = 6
-    
+
         self.is_moving = False
         # Draw the initial dot
         
@@ -129,8 +134,7 @@ class TestingScreen(CTk.CTkFrame):
                                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius,
                                            fill="black", outline="black")
       
-    
-        
+
         #button to return to the main screen
         self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
         self.button.place(anchor="s", relx=0.05, rely=0.95)
@@ -158,30 +162,27 @@ class TestingScreen(CTk.CTkFrame):
             # Sleep for short time to simulate eye movement
             time.sleep(1)
 
-   
-    #start the test and flag is_moving as true 
     
+    #start the test and flag is_moving as true 
     def start_test(self):
         
         self.button2.configure(state="disabled")
         #print("start test")
         self.is_moving = True
         self.speed = 8
-
-       # threading.Thread(target=self.move_dot).start()
-
-        #threading.Thread(target=self.send_eye_tracking_data_continously).start()
-        record = threading.Thread(target=recordVideo).start()
-        time.sleep(2)
-
     
+        self.start_time = time.time()
+        self.recording_duration = 5 # Duration in seconds, there is a delay before the test starts so we can make the dot move a little extra 
+
+        #record = threading.Thread(target=recordVideo).start()
+        time.sleep(2)
         self.move_dot()
      
         
     def move_dot(self):
         #move = True
         
-    
+        
         # Update the dot's position
         self.dot_x += self.speed
 
@@ -197,13 +198,14 @@ class TestingScreen(CTk.CTkFrame):
         #turn off after 20 seconds
         elapsed_time = time.time() - currentTime
 
-    # Convert elapsed time to integer to truncate the decimal part
+        # Convert elapsed time to integer to truncate the decimal part
 
         # Repeat the animation every 10 milliseconds    
-        if self.is_moving:
+        if self.is_moving and time.time() - self.start_time < self.recording_duration:
             self.after(10, self.move_dot)
-        
-        
+        else:
+            self.switch_to_results()
+    
 
     def reset_screen(self):
         # Reset all attributes to their initial values
@@ -215,8 +217,6 @@ class TestingScreen(CTk.CTkFrame):
         self.canvas.coords(self.dot, self.dot_x - self.dot_radius, self.dot_y - self.dot_radius,
                            self.dot_x + self.dot_radius, self.dot_y + self.dot_radius)  # Reset dot position
         
-
-
     #swap to main scene 
     def return_to_main(self):
         
@@ -228,6 +228,13 @@ class TestingScreen(CTk.CTkFrame):
         self.master.main_frame.pack(fill="both", expand=True)
         #self.master.main_frame.update()
         self.master.main_frame.update_idletasks()
+
+    def switch_to_results(self):
+        # Hide the main frame and show the testing frame
+        self.reset_screen()
+        self.master.testing_frame.pack_forget()
+        self.master.caseResult_frame.pack(fill="both", expand=True)
+        self.master.caseResult_frame.update_idletasks()
 
 ##################################################################################################################################
 global caseFound
@@ -285,7 +292,31 @@ class SearchScreen(CTk.CTkFrame):
         #self.master.main_frame.update()
         self.master.main_frame.update_idletasks()
         
+#===============================================================================================================================
+class caseResult(CTk.CTkFrame):
+    def __init__(self, parent):
+        super().__init__(parent)
 
+        self.canvas = CTk.CTkCanvas(self, width=screenWidth, height=screenHeight, highlightthickness=0)
+        self.canvas.pack()
+
+        #search box label 
+        searchLabel = CTk.CTkLabel(self, text = "Waiting for results of case: " + str(caseNumber), font = (sofiaPro, 34, "bold"), bg_color= "#f0f0f0", fg_color= "#f0f0f0")
+        searchLabel.place(anchor = "s", relx = .5, rely = .45)
+
+       
+      
+        #return to main button 
+        self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
+        self.button.place(anchor="s", relx=0.05, rely=0.95)
+
+
+    def return_to_main(self):
+
+        self.master.caseResult_frame.pack_forget()
+        self.master.main_frame.pack(fill="both", expand=True)
+        #self.master.main_frame.update()
+        self.master.main_frame.update_idletasks()
 
 
 # Main
