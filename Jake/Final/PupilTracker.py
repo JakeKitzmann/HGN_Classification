@@ -169,7 +169,7 @@ class PupilTracker:
                     writer = csv.writer(file)
 
                     for i in range(len(leftEyeVectors)):
-                        writer.writerow([leftEyeVectors[i], rightEyeVectors[i],'0'])
+                        writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
 
                 cap.release()
                 cv.destroyAllWindows()
