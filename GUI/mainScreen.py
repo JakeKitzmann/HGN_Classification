@@ -32,7 +32,8 @@ move = None
 ################
 # REMOVE LATER #
 ################
-eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
+# eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
+eye_positions = []
 
 ################################################################################################################################################
 #main start screen
@@ -103,7 +104,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('0.0.0.0', 4000)
+        self.server_address = ('192.168.1.7', 3500)
         self.client_socket.connect(self.server_address)
 
         #self.title("Moving Dot")
@@ -156,10 +157,11 @@ class TestingScreen(CTk.CTkFrame):
         for x_position in eye_positions:
             self.send_eye_tracking_data(x_position)
             # Sleep for short time to simulate eye movement
-            time.sleep(1)
+            #time.sleep(1)
 
    
     #start the test and flag is_moving as true 
+
     
     def start_test(self):
         
@@ -168,10 +170,11 @@ class TestingScreen(CTk.CTkFrame):
         self.is_moving = True
         self.speed = 8
 
-       # threading.Thread(target=self.move_dot).start()
+        #threading.Thread(target=self.move_dot).start()
 
         #threading.Thread(target=self.send_eye_tracking_data_continously).start()
-        record = threading.Thread(target=recordVideo).start()
+        #record = threading.Thread(target=recordVideo).start()
+        threading.Thread(target=recordVideo).start()
         time.sleep(2)
 
     

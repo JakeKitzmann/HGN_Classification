@@ -1,48 +1,44 @@
 import socket
 import threading
-import json
+import csv
 
 # Server configuration
-HOST = '0.0.0.0'
+HOST = '127.0.0.1'
 PORT = 4000
 
 client_id = 0
 
 # Function to handle each client connection
 def handle_client_connection(client_socket, client_address, client_id):
-    # Initialize previous eye position
-    prev_position = None
+    prev_x1_position = None
+    prev_x2_position = None
 
-    # Receive data from client
-    while True:
-        data = client_socket.recv(1024)
-        if not data:
-            break
+    with open('Jake/Final/output.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+        #next(csv_reader) # Skip header if present
 
-        try:
-            # Parse received JSON data
-            eye_data = json.loads(data)
+        for row in csv_reader:
+            if len(row) == 2:
 
-            # Process recieved eye tracking data
-            x_position = eye_data['x_position']
-            if x_position is not None:
-                print(f"Recieved eye tracking data from Client {client_id}: X position = {x_position}")
+                x1_position = float(row[0])
+                x2_position = float(row[1])
 
-                # Calculate differene in positions
-                if prev_position is not None:
-                    difference = x_position - prev_position
-                    print(f"Difference in positions: {difference}")
+                if x1_position is not None and x2_position is not None:
+                    print(f"Recieved eye tracking data csv data from Client {client_id}: x1 position = {x1_position}, x2 position = {x2_position}")
 
-                # Update previous position
-                prev_position = x_position
+                    if prev_x1_position is not None and prev_x2_position is not None:
+                        x1_difference = x1_position - prev_x1_position
+                        x2_difference = x2_position - prev_x2_position
+                        print(f"Differences in positions: x1 = {x1_difference}, x2 = {x2_difference}")
+
+                    prev_x1_position = x1_position
+                    prev_x2_position = x2_position
+
+                else:
+                    print("Invalid eye tracking data format.")
             else:
-                print("Invalid eye tracking data format.")
-        except json.JSONDecodeError:
-            print("Error decoding JSON data.")
-            continue    # Skip processing invalid JSON data
+                print("Invalid CSV row format.")
 
-        # Process the received data
-        #print(f"Received data from {client_socket.getpeername()}: {data.decode('utf-8')}")
 
     # Close the client socket when done 
     client_socket.close()
