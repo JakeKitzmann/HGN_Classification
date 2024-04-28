@@ -5,7 +5,7 @@ import os
 import time
 
 # Server configuration
-HOST = '192.168.1.12'
+HOST = '127.0.0.1'
 PORT = 3504
 
 client_id = 0
@@ -24,7 +24,7 @@ def handle_client_connection(client_socket, client_address, client_id):
                 #next(csv_reader) # Skip header if present
 
                 for row in csv_reader:
-                    if len(row) == 2:
+                    if len(row) == 3:
                         x1_position = float(row[0])
                         x2_position = float(row[1])
 

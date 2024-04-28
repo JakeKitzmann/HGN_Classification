@@ -8,7 +8,7 @@ def recordVideo():
 
     if not cap.isOpened():
         print("Error: Could not open webcam.")
-        return
+        return -1
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_file = 'GUI/videoTests/longTest.mp4'

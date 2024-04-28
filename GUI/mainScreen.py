@@ -1,5 +1,5 @@
 import customtkinter as CTk
-import tkinter as tk
+import tkinter.messagebox as mb
 from record import recordVideo
 import threading 
 from PIL import ImageFont
@@ -104,7 +104,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('192.168.1.12', 3504)
+        self.server_address = ('192.168.1.12', 3507)
         self.client_socket.connect(self.server_address)
 
         #self.title("Moving Dot")
@@ -166,19 +166,23 @@ class TestingScreen(CTk.CTkFrame):
     def start_test(self):
         
         self.button2.configure(state="disabled")
-        #print("start test")
+        message = mb.Message(master=None, default="ok", icon= "warning", 
+                             message="    WARNING CAN NOT RECORD\n        Could not access camera\n           Please restart app",
+                             title="WARNING")
+        
         self.is_moving = True
         self.speed = 8
 
-        #threading.Thread(target=self.move_dot).start()
+        cam_result = recordVideo()
+        if cam_result == -1:
+            message.show()
 
-        #threading.Thread(target=self.send_eye_tracking_data_continously).start()
-        #record = threading.Thread(target=recordVideo).start()
+        self.move_dot()
         threading.Thread(target=recordVideo).start()
         time.sleep(2)
 
     
-        self.move_dot()
+        
      
         
     def move_dot(self):
