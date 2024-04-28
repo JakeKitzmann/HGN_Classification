@@ -3,7 +3,7 @@ import DrunkClassification
 def main():
 
     # create Model
-    pt = DrunkClassification.classify_person("Server/Classification/new.csv", threshold=0.5)
+    pt = DrunkClassification.classify_person("Server/Classification/new.csv", threshold=0.06)
     print(pt)
 
    
