@@ -1,10 +1,12 @@
 import socket
 import threading
 import csv
+import os
+import time
 
 # Server configuration
-HOST = '127.0.0.1'
-PORT = 4000
+HOST = '192.168.1.12'
+PORT = 3504
 
 client_id = 0
 
@@ -13,32 +15,38 @@ def handle_client_connection(client_socket, client_address, client_id):
     prev_x1_position = None
     prev_x2_position = None
 
-    with open('Jake/Final/output.csv', 'r') as file:
-        csv_reader = csv.reader(file)
-        #next(csv_reader) # Skip header if present
+    while True:
+        # Check if the file exists
+        if os.path.exists('output.csv'):
+            # Process the CSV file received from the client
+            with open('output.csv', 'r') as file:
+                csv_reader = csv.reader(file)
+                #next(csv_reader) # Skip header if present
 
-        for row in csv_reader:
-            if len(row) == 2:
+                for row in csv_reader:
+                    if len(row) == 2:
+                        x1_position = float(row[0])
+                        x2_position = float(row[1])
 
-                x1_position = float(row[0])
-                x2_position = float(row[1])
+                        if x1_position is not None and x2_position is not None:
+                            print(f"Received eye tracking data csv data from Client {client_id}: x1 position = {x1_position}, x2 position = {x2_position}")
 
-                if x1_position is not None and x2_position is not None:
-                    print(f"Recieved eye tracking data csv data from Client {client_id}: x1 position = {x1_position}, x2 position = {x2_position}")
+                            if prev_x1_position is not None and prev_x2_position is not None:
+                                x1_difference = x1_position - prev_x1_position
+                                x2_difference = x2_position - prev_x2_position
+                                print(f"Differences in positions: x1 = {x1_difference}, x2 = {x2_difference}")
 
-                    if prev_x1_position is not None and prev_x2_position is not None:
-                        x1_difference = x1_position - prev_x1_position
-                        x2_difference = x2_position - prev_x2_position
-                        print(f"Differences in positions: x1 = {x1_difference}, x2 = {x2_difference}")
+                            prev_x1_position = x1_position
+                            prev_x2_position = x2_position
 
-                    prev_x1_position = x1_position
-                    prev_x2_position = x2_position
+                        else:
+                            print("Invalid eye tracking data format.")
+                    else:
+                        print("Invalid CSV row format.")
+            break  # Exit the loop once the file is processed
 
-                else:
-                    print("Invalid eye tracking data format.")
-            else:
-                print("Invalid CSV row format.")
-
+        # Sleep for a while before checking again
+        time.sleep(1)
 
     # Close the client socket when done 
     client_socket.close()
@@ -53,7 +61,6 @@ server_socket.bind((HOST, PORT))
 server_socket.listen(5)
 print(f"Server listening on {HOST}:{PORT}")
 
-
 while True:
     # Accept a new connection
     client_socket, client_address = server_socket.accept()
@@ -65,10 +72,3 @@ while True:
 
     # Increment client_id for next client connection
     client_id += 1
-
-    
-
-    
-
-
-

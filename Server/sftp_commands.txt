@@ -1,3 +1,0 @@
-cd /home/admin/Project
-put /home/jarkin/Iot-Project/test.csv
-exit
