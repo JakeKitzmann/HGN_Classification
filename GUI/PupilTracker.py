@@ -169,7 +169,14 @@ class PupilTracker:
                     writer = csv.writer(file)
 
                     for i in range(len(leftEyeVectors)):
-                        writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
+                        #the following line is for cases afterward the intial data for model has been collected
+                        #writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
+
+                        #the following line is for sober data collection
+                        #writer.writerow([leftEyeVectors[i], rightEyeVectors[i],0])
+
+                        #the following line is for drunk data collection
+                        writer.writerow([leftEyeVectors[i], rightEyeVectors[i],1])
 
                 cap.release()
                 cv.destroyAllWindows()
