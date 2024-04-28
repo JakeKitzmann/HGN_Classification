@@ -3,7 +3,7 @@ import threading
 import json
 
 # Server configuration
-HOST = '0.0.0.0'
+HOST = '127.0.0.1'
 PORT = 4000
 
 client_id = 0

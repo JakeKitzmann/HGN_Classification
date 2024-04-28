@@ -108,7 +108,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('0.0.0.0', 4000)
+        self.server_address = ('127.0.0.1', 4000)
         self.client_socket.connect(self.server_address)
 
         #GET NEXT AVAILABLE CASE NUMBER FROM FIRE BASE HERE &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&           *******         *************       *********
