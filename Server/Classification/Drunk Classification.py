@@ -67,7 +67,7 @@ def classify_person(predictions, threshold=0.5):
     
     # Compare against the threshold
     if percentage_intoxicated > threshold:
-        return 'Drunk'
+        return 'Intoxicated'
     else:
         return 'Sober'
 
