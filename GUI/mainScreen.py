@@ -183,7 +183,7 @@ class TestingScreen(CTk.CTkFrame):
         self.speed = 8
     
         self.start_time = time.time()
-        self.recording_duration = 4 # Duration in seconds, there is a delay before the test starts so we can make the dot move a little extra 
+        self.recording_duration = 24 # Duration in seconds, there is a delay before the test starts so we can make the dot move a little extra 
 
         #record = threading.Thread(target=recordVideo).start()
         time.sleep(2)
