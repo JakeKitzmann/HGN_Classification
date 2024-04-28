@@ -111,11 +111,22 @@ class TestingScreen(CTk.CTkFrame):
         self.server_address = ('0.0.0.0', 4000)
         self.client_socket.connect(self.server_address)
 
-        #GET NEXT AVAILABLE CASE NUMBER FROM FIRE BASE HERE 
+        #GET NEXT AVAILABLE CASE NUMBER FROM FIRE BASE HERE &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&           *******         *************       *********
         caseNumber = 111
+     
+        self.canvas = CTk.CTkCanvas(self, width=1920, height=1080, highlightthickness=0)
 
-        self.canvas = CTk.CTkCanvas(self, width=1920, height=1080, bg="white", highlightthickness=0)
-    
+        #directions frame 
+        directionsBox = CTk.CTkFrame(self, fg_color="#3b8ed0")
+        directionsBox.place(anchor="center", relx=0.5, rely=0.75)
+        directionsBox.place_configure(width=400, height=250)
+
+
+        #user directions %%%% need to adjsut 
+        directions = "\n \n- Keep eyes level with webcam \n- Keep head forward and track dot with eyes only \n - Remain 2-4 inches away from webcam \n- Continue for duration of test \n- Press Begin Test when ready"
+        directions_text = CTk.CTkLabel(directionsBox, text=directions, wraplength= 850, font = (sofiaPro, 18), text_color = "white", justify = "left")
+        directions_text.place(anchor = "s", relx = .5, rely = .85)
+        
         self.canvas.pack()
 
         # Initial dot position
@@ -140,8 +151,8 @@ class TestingScreen(CTk.CTkFrame):
         self.button.place(anchor="s", relx=0.05, rely=0.95)
         
         #button to begin test
-        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=250, height=60,font=(sofiaPro, 18))
-        self.button2.place(anchor="s", relx=0.5, rely=0.5)
+        self.button2 = CTk.CTkButton(self, text="Begin Test", command=self.start_test, width=400, height=60,font=(sofiaPro, 18))
+        self.button2.place(anchor="s", relx=0.5, rely=0.4)
         #self.button2.place()  # Place the button back
         # Start the animation
         #self.move_dot()
@@ -172,7 +183,7 @@ class TestingScreen(CTk.CTkFrame):
         self.speed = 8
     
         self.start_time = time.time()
-        self.recording_duration = 5 # Duration in seconds, there is a delay before the test starts so we can make the dot move a little extra 
+        self.recording_duration = 4 # Duration in seconds, there is a delay before the test starts so we can make the dot move a little extra 
 
         #record = threading.Thread(target=recordVideo).start()
         time.sleep(2)
@@ -270,15 +281,20 @@ class SearchScreen(CTk.CTkFrame):
         # Bind the <Return> key event to the search field
         self.search_field.bind("<Return>", on_enter_pressed)
 
+
         #handle what the database sends about the case number 
         def caseResults(user_input):
             ref = firebase_db.reference('/Case Numbers')
             snapshot = ref.order_by_key().equal_to(user_input).get()
-
             if snapshot:
                 print("Case number found. Data: ", snapshot[user_input])
+                results = CTk.CTkLabel(self, text=("Case number found. Data: ", snapshot[user_input]), wraplength= 850, font = (sofiaPro, 18), text_color = "black", justify = "left")
+                results.place(anchor = "s", relx = .5, rely = .85)
+
             else:
                 print("Case number not found.")
+
+
             #print("Case number =", user_input)
 
     def return_to_main(self):
@@ -300,12 +316,21 @@ class caseResult(CTk.CTkFrame):
         self.canvas = CTk.CTkCanvas(self, width=screenWidth, height=screenHeight, highlightthickness=0)
         self.canvas.pack()
 
+        intro_box = CTk.CTkFrame(self, fg_color="#3b8ed0")
+        intro_box.place(anchor="center", relx=0.5, rely=0.5)
+        intro_box.place_configure(width=600, height=250)
+
+
+
         #search box label 
-        searchLabel = CTk.CTkLabel(self, text = "Waiting for results of case: " + str(caseNumber), font = (sofiaPro, 34, "bold"), bg_color= "#f0f0f0", fg_color= "#f0f0f0")
+        searchLabel = CTk.CTkLabel(intro_box, text = "Waiting for results of case: " + str(caseNumber), font = (sofiaPro, 34, "bold"))
         searchLabel.place(anchor = "s", relx = .5, rely = .45)
 
-       
-      
+        #label for case results 
+
+        #MIGHT NOT BE ABLE TO GET CASE TO SHOW UP HERE THIS WINDOW MIGHT BE FOR ONLY SHOWING THE CASE NUMBER IF WE DONT HAVE TIME TO FIGURE THAT OUT 
+
+        
         #return to main button 
         self.button = CTk.CTkButton(self, text="Return to Main", command=self.return_to_main, width=100, height=60,font=(sofiaPro, 18))
         self.button.place(anchor="s", relx=0.05, rely=0.95)
