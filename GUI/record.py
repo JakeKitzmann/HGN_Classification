@@ -10,7 +10,7 @@ def recordVideo():
 
     if not cap.isOpened():
         print("Error: Could not open webcam.")
-        return
+        return -1
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_file = 'GUI/videoTests/longTest.mp4'
@@ -39,7 +39,11 @@ def recordVideo():
 
     #UNCOMMENT FOR TEST TO ACUTALLY RUN 
     #BEST THRESHOLD VALUE IS UNKNOWN BUT WE SHOULD BE ABLE TO USE THE SAME VALUE FOR THE TESTS WHEN WE USE THE RING LIGHT 
+<<<<<<< HEAD
     #pt.runVideo(video = 'GUI/videoTests/longTest.mp4', threshold = 115, output = 'Jake/Final/output.csv')
+=======
+    pt.runVideo(video = 'GUI/videoTests/longTest.mp4', threshold = 115, output = 'C:/Users/jarki/Desktop/output.csv')
+>>>>>>> 4f62c796bcd07e10c0fbeb4a3a7f432eba4c0d94
     
 
 
