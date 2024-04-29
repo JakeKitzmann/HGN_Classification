@@ -261,8 +261,16 @@ class SearchScreen(CTk.CTkFrame):
 
         
         #search box label 
-        searchLabel = CTk.CTkLabel(self, text = "Search by case", font = (sofiaPro, 34, "bold"), bg_color= "#f0f0f0", fg_color= "#f0f0f0")
-        searchLabel.place(anchor = "s", relx = .5, rely = .45)
+        self.titleBox = CTk.CTkFrame(self,width = 250, height = 74, fg_color="#3b8ed0")
+        self.titleBox.place(anchor = "s", relx = .5, rely = .45)
+        
+        searchLabel = CTk.CTkLabel(self.titleBox, text = "Search by case", font = (sofiaPro, 34, "bold"), text_color="white")
+        searchLabel.place(anchor = "s", relx = .5, rely = .75)
+
+     
+
+
+        
 
         #search field 
         self.search_field = CTk.CTkEntry(self, width = 250, font = (sofiaPro, 16), placeholder_text="Enter case number here")
