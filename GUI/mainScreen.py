@@ -104,7 +104,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('192.168.1.12', 3507)
+        self.server_address = ('192.168.1.12', 3513)
         self.client_socket.connect(self.server_address)
 
         #self.title("Moving Dot")
@@ -143,22 +143,6 @@ class TestingScreen(CTk.CTkFrame):
         # Start the animation
         #self.move_dot()
 
-    # Function to send eye tracking data to the server
-    def send_eye_tracking_data(self, x_position):
-        data = {
-            'x_position': x_position
-        }
-        message = json.dumps(data)
-        self.client_socket.sendall(message.encode())
-
-    # Function to send eye tracking data continously
-    def send_eye_tracking_data_continously(self):
-        # Simulate sending eye tracking data after updating dot's position
-        for x_position in eye_positions:
-            self.send_eye_tracking_data(x_position)
-            # Sleep for short time to simulate eye movement
-            #time.sleep(1)
-
    
     #start the test and flag is_moving as true 
 
@@ -173,12 +157,10 @@ class TestingScreen(CTk.CTkFrame):
         self.is_moving = True
         self.speed = 8
 
-        cam_result = recordVideo()
-        if cam_result == -1:
-            message.show()
-
         self.move_dot()
-        threading.Thread(target=recordVideo).start()
+        record = threading.Thread(target=recordVideo).start()
+        if record == -1:
+            message.show()
         time.sleep(2)
 
     

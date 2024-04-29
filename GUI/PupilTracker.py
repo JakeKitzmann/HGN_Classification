@@ -248,6 +248,7 @@ class PupilTracker:
         with open(output, 'w', newline='') as file:
             writer = csv.writer(file)
 
+            writer.writerow(["left_vector", "right_vector", "Intoxication"])
             for i in range(len(leftEyeVectors)):
                 writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
 
