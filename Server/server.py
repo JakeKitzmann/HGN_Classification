@@ -6,7 +6,7 @@ import time
 
 # Server configuration
 HOST = '127.0.0.1'
-PORT = 3504
+PORT = 4000
 
 client_id = 0
 
