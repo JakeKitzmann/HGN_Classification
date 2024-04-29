@@ -39,7 +39,7 @@ def recordVideo():
 
     #UNCOMMENT FOR TEST TO ACUTALLY RUN 
     #BEST THRESHOLD VALUE IS UNKNOWN BUT WE SHOULD BE ABLE TO USE THE SAME VALUE FOR THE TESTS WHEN WE USE THE RING LIGHT 
-    #pt.runVideo(video = 'GUI/videoTests/longTest.mp4', threshold = 115, output = 'Jake/Final/output.csv')
+    pt.runVideo(video = 'GUI/videoTests/longTest.mp4', threshold = 115, output = 'Jake/Final/output.csv')
     
 
 

@@ -67,8 +67,8 @@ class MainApplication(CTk.CTk):
         intro_box.place_configure(width=screenWidth/1.98, height=screenHeight+5)
 
         #Title 
-        title_text = CTk.CTkLabel(intro_box, text="The HNG Test", font = (sofiaPro, 48, "bold"), text_color = "white")
-        title_text.pack(side = "top", pady = (screenHeight*.35, 10))
+        title_text = CTk.CTkLabel(intro_box, text="The HGN Test", font = (sofiaPro, 48, "bold"), text_color = "white")
+        title_text.pack(side = "top", pady = (screenHeight*.33, 10))
         #intro
         directionsText = "Directions: Keep head 4-6 inches away from webcam and keep "
         HNGintro = "The Horizontal Gaze Nystagmus Test (HGN) is a screening method commonly utilized in various contexts to assess eye movement patterns. It involves tracking the movement of an object with the eyes, observing for any irregularities in the smoothness and continuity of gaze. In a typical HGN test, the subject is instructed to follow a moving target horizontally across their field of vision while maintaining a stable head position. The test aims to identify any deviations from normal eye movement patterns, which may indicate underlying physiological or neurological conditions. By analyzing the quality and consistency of gaze tracking, HGN testing can provide valuable insights into visual function and ocular health."
@@ -77,12 +77,12 @@ class MainApplication(CTk.CTk):
         
 
         # Button on the main screen to switch to the testing screen
-        button = CTk.CTkButton(self.main_frame, text="HNG Testing", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
-        button.place(anchor="center", relx=0.75, rely=0.5)
+        button = CTk.CTkButton(self.main_frame, text="HGN Testing", command=self.switch_to_testing, width=300, height=80, font=(sofiaPro, 18))
+        button.place(anchor="center", relx=0.75, rely=0.45)
 
         # Button to switch to search screen 
         button = CTk.CTkButton(self.main_frame, text="Search Cases", command=self.switch_to_search, width=300, height=80, font=(sofiaPro, 18))
-        button.place(anchor="center", relx=0.75, rely=0.6)
+        button.place(anchor="center", relx=0.75, rely=0.55)
         
       
     #switch to testing scene 
@@ -117,14 +117,14 @@ class TestingScreen(CTk.CTkFrame):
         self.canvas = CTk.CTkCanvas(self, width=1920, height=1080, highlightthickness=0)
 
         #directions frame 
-        directionsBox = CTk.CTkFrame(self, fg_color="#3b8ed0")
+        directionsBox = CTk.CTkFrame(self, fg_color="#3b8ed0",  corner_radius= 10)
         directionsBox.place(anchor="center", relx=0.5, rely=0.75)
         directionsBox.place_configure(width=400, height=250)
 
 
         #user directions %%%% need to adjsut 
         directions = "\n \n- Keep eyes level with webcam \n- Keep head forward and track dot with eyes only \n - Remain 2-4 inches away from webcam \n- Continue for duration of test \n- Press Begin Test when ready"
-        directions_text = CTk.CTkLabel(directionsBox, text=directions, wraplength= 850, font = (sofiaPro, 18), text_color = "white", justify = "left")
+        directions_text = CTk.CTkLabel(directionsBox, text=directions, wraplength= 400, font = (sofiaPro, 18), text_color = "white", justify = "left", bg_color="transparent")
         directions_text.place(anchor = "s", relx = .5, rely = .85)
         
         self.canvas.pack()
@@ -178,6 +178,7 @@ class TestingScreen(CTk.CTkFrame):
     def start_test(self):
         
         self.button2.configure(state="disabled")
+        self.button.configure(state="disabled")
         #print("start test")
         self.is_moving = True
         self.speed = 8
@@ -222,6 +223,7 @@ class TestingScreen(CTk.CTkFrame):
         # Reset all attributes to their initial values
         self.is_moving = False
         self.button2.configure(state="normal")
+        self.button.configure(state="normal")
         self.dot_x = 960
         self.dot_y = 20
         self.speed = 0
@@ -259,8 +261,16 @@ class SearchScreen(CTk.CTkFrame):
 
         
         #search box label 
-        searchLabel = CTk.CTkLabel(self, text = "Search by case", font = (sofiaPro, 34, "bold"), bg_color= "#f0f0f0", fg_color= "#f0f0f0")
-        searchLabel.place(anchor = "s", relx = .5, rely = .45)
+        self.titleBox = CTk.CTkFrame(self,width = 250, height = 74, fg_color="#3b8ed0")
+        self.titleBox.place(anchor = "s", relx = .5, rely = .45)
+        
+        searchLabel = CTk.CTkLabel(self.titleBox, text = "Search by case", font = (sofiaPro, 34, "bold"), text_color="white")
+        searchLabel.place(anchor = "s", relx = .5, rely = .75)
+
+     
+
+
+        
 
         #search field 
         self.search_field = CTk.CTkEntry(self, width = 250, font = (sofiaPro, 16), placeholder_text="Enter case number here")
@@ -282,14 +292,21 @@ class SearchScreen(CTk.CTkFrame):
         self.search_field.bind("<Return>", on_enter_pressed)
 
 
+        self.responseBox = CTk.CTkFrame(self, fg_color="#3b8ed0", corner_radius=15)
+        self.responseBox.pack_forget()
+
+        self.results = CTk.CTkLabel(self.responseBox, text=("Case number found. Data: "), wraplength= 850, font = (sofiaPro, 18), text_color = "white", justify = "left")
+
         #handle what the database sends about the case number 
         def caseResults(user_input):
             ref = firebase_db.reference('/Case Numbers')
             snapshot = ref.order_by_key().equal_to(user_input).get()
             if snapshot:
                 print("Case number found. Data: ", snapshot[user_input])
-                results = CTk.CTkLabel(self, text=("Case number found. Data: ", snapshot[user_input]), wraplength= 850, font = (sofiaPro, 18), text_color = "black", justify = "left")
-                results.place(anchor = "s", relx = .5, rely = .85)
+                self.results = CTk.CTkLabel(self.responseBox, text=("Case number found. Data: ", snapshot[user_input], "    "), wraplength= 850, font = (sofiaPro, 18), text_color = "white", justify = "left")
+                self.results.place(anchor = "s", relx = .5, rely = .7)
+                self.responseBox.place(anchor="center", relx=0.5, rely=0.7)
+                self.responseBox.place_configure(width=500, height=75)
 
             else:
                 print("Case number not found.")
@@ -301,6 +318,8 @@ class SearchScreen(CTk.CTkFrame):
        # self.reset_screen()
         self.search_field.delete(0, 'end')
         self.search_field._placeholder_text = "Enter case number here"
+        self.responseBox.pack_forget()
+        self.master.search_frame.update_idletasks()
         self.master.search_frame.pack_forget()
        # self.pack_forget()
        
@@ -316,15 +335,15 @@ class caseResult(CTk.CTkFrame):
         self.canvas = CTk.CTkCanvas(self, width=screenWidth, height=screenHeight, highlightthickness=0)
         self.canvas.pack()
 
-        intro_box = CTk.CTkFrame(self, fg_color="#3b8ed0")
+        intro_box = CTk.CTkFrame(self, fg_color="#3b8ed0", corner_radius=15)
         intro_box.place(anchor="center", relx=0.5, rely=0.5)
         intro_box.place_configure(width=600, height=250)
 
 
 
         #search box label 
-        searchLabel = CTk.CTkLabel(intro_box, text = "Waiting for results of case: " + str(caseNumber), font = (sofiaPro, 34, "bold"))
-        searchLabel.place(anchor = "s", relx = .5, rely = .45)
+        searchLabel = CTk.CTkLabel(intro_box, text = "Your case number is \n " + str(caseNumber), font = (sofiaPro, 34, "bold"))
+        searchLabel.place(anchor = "s", relx = .5, rely = .5)
 
         #label for case results 
 
