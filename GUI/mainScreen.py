@@ -104,7 +104,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('192.168.1.12', 3513)
+        self.server_address = ('192.168.1.12', 3514)
         self.client_socket.connect(self.server_address)
 
         #self.title("Moving Dot")
