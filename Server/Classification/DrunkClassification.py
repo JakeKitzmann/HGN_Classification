@@ -40,7 +40,7 @@ def process_test_data():
     kNN_fit = kNN_model.fit(train_ftrs, train_tgt)
     kNN_predictions = kNN_fit.predict(test_ftrs)
     kNN_score = metrics.accuracy_score(test_tgt, kNN_predictions)
-    print(f'kNN model accuracy: {kNN_score:0.2f}')
+    #print(f'kNN model accuracy: {kNN_score:0.2f}')
     return test_data, kNN_model
 
 def run_classification(data_path):
@@ -56,7 +56,7 @@ def run_classification(data_path):
     new_data['Intoxication'] = new_data['Intoxication'].map({1: 'drunk', 0: 'sober'})
 
     # Display the predictions
-    print(new_data[['left_vector', 'right_vector','Intoxication']])
+    #print(new_data[['left_vector', 'right_vector','Intoxication']])
     return new_data
 
 # Visualize the proportion of drunk vs. sober data

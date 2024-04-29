@@ -4,7 +4,6 @@ def main():
 
     # create Model
     pt = DrunkClassification.classify_person("Server/Classification/new.csv", threshold=0.06)
-    print(pt)
     return pt
    
 
