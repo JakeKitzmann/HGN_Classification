@@ -1,5 +1,5 @@
 import customtkinter as CTk
-import tkinter as tk
+import tkinter.messagebox as mb
 from record import recordVideo
 import threading 
 from PIL import ImageFont
@@ -32,7 +32,8 @@ move = None
 ################
 # REMOVE LATER #
 ################
-eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
+# eye_positions = [960, 973, 975, 987, 998, 1004, 1020, 1025, 1030, 1032, 1038, 1044, 1050, 1059, 1060, 1066, 1070]
+eye_positions = []
 
 ################################################################################################################################################
 #main start screen
@@ -108,6 +109,7 @@ class TestingScreen(CTk.CTkFrame):
 
         # Initialize socket connection to server
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_address = ('192.168.1.12', 3514)
         self.server_address = ('127.0.0.1', 4000)
         self.client_socket.connect(self.server_address)
 
@@ -157,6 +159,7 @@ class TestingScreen(CTk.CTkFrame):
         # Start the animation
         #self.move_dot()
 
+   
     # Function to send eye tracking data to the server
     def send_eye_tracking_data(self, x_position):
         data = {

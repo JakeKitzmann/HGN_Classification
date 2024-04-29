@@ -255,6 +255,108 @@ class PupilTracker:
         with open(output, 'w', newline='') as file:
             writer = csv.writer(file)
 
+            writer.writerow(["left_vector", "right_vector", "Intoxication"])
+            for i in range(len(leftEyeVectors)):
+                writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
+
+        cap.release()
+        cv.destroyAllWindows()
+
+        print('Data Acquisition Complete')
+
+    # record video
+    def record(self, output):
+        cap = cv.VideoCapture(0)
+        cap.set(3, 640)
+        cap.set(4, 480)
+        out = cv.VideoWriter(output, self.fourcc, 20.0, (640, 480))
+
+        while True:
+            ret, frame = cap.read()
+            out.write(frame)
+
+            # flip the frame in the x-axis
+            frame = cv.flip(frame, 1)
+            cv.imshow('original', frame)
+
+
+            if cv.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
+        out.release()
+        cv.destroyAllWindows()
+    # process stored mp4 video
+    def runVideo(self, video, threshold, output):
+
+        cap = cv.VideoCapture(video)
+        cv.namedWindow('image')
+
+        # position storage for each eye
+        leftEye = Eye.Eye()
+        rightEye = Eye.Eye()
+
+        # magnitude storage for each eye (pupil to center of eye vector magnitude)
+        leftEyeVectors = []
+        rightEyeVectors = []
+        
+        # data acquisition loop
+        while cap.isOpened():
+            _, frame = cap.read()
+
+            if frame is None:
+                break
+
+            # commented out to allow for eye detection w/o full face detection
+            face_frame = self.detect_faces(frame)
+            if face_frame is not None:
+
+                eyeA, eyeB, sides = self.detect_eyes(frame)
+                eyes = [eyeA, eyeB]
+
+                idx = 0 # index for sides
+
+                # for each eye edtected
+                for eye in eyes:
+                    if eye is not None:
+
+                        # keypoint acquisition
+                        eye = self.cut_eyebrows(eye)
+                        keypoints = self.blob_process(eye, threshold)
+                        eye = cv.drawKeypoints(eye, keypoints, eye, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+                        # keypoint storage
+                        if keypoints is not None:
+                            if sides[idx] == 0:
+                                leftEye.x, leftEye.y = keypoints[0].pt[0], keypoints[0].pt[1]
+                                leftEye.center_x, leftEye.center_y = eye.shape[1] / 2, eye.shape[0] / 2
+                            else:
+                                rightEye.x, rightEye.y = keypoints[0].pt[0], keypoints[0].pt[1]
+                                rightEye.center_x, rightEye.center_y = eye.shape[1] / 2, eye.shape[0] / 2
+
+                        idx += 1 # increment index
+            
+
+            # debug
+            print('---------')
+            print('Left Eye: ', leftEye.x, leftEye.y)
+            print('Right Eye: ', rightEye.x, rightEye.y)
+
+            # magnitude calculation and storage
+            if leftEye.x is not None and rightEye.x is not None:
+                magnitudeL= leftEye.magnitude()
+                print('Left Eye Center to Pupil Vector Magnitude: ', magnitudeL)
+                MagnitudeR = rightEye.magnitude()
+                print('Right Eye Center to Pupil Vector Magnitude: ', MagnitudeR)
+
+                # storage
+                leftEyeVectors.append(magnitudeL)
+                rightEyeVectors.append(MagnitudeR)
+
+        # write to csv
+        with open(output, 'w', newline='') as file:
+            writer = csv.writer(file)
+
             for i in range(len(leftEyeVectors)):
                 writer.writerow([leftEyeVectors[i], rightEyeVectors[i]])
 
